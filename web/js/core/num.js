@@ -93,7 +93,7 @@
   /** Python round(x) / round(x, d). */
   function pyRound(x, d) {
     if (d === undefined) {
-      const f = Math.floor(x);
+      const f = Math.floor(x) + 0;     // + 0: Python's round(-0.0) is the integer 0, not -0
       const diff = x - f;
       if (diff < 0.5) return f;
       if (diff > 0.5) return f + 1;

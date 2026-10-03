@@ -22,5 +22,55 @@
     "electron-builder": "^26.15.3",
     "fast-check": "^3.23.2",
     "three": "^0.170.0"
+  },
+  "build": {
+    "appId": "com.alexalesha.calibrate3dprinter",
+    "productName": "Calibrate 3D Printer",
+    "copyright": "Copyright (c) 2026 ALEXalesha",
+    "directories": {
+      "output": "dist/electron"
+    },
+    "files": [
+      "electron/**",
+      "web/**",
+      "assets/icon.ico",
+      "assets/icon.png",
+      "LICENSE",
+      "!**/*.map"
+    ],
+    "electronLanguages": [
+      "en-US",
+      "ru"
+    ],
+    "compression": "maximum",
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "portable": {
+      "artifactName": "Calibrate3dPrinter-Electron-${version}-Portable.${ext}"
+    },
+    "nsis": {
+      "artifactName": "Calibrate3dPrinter-Electron-${version}-Setup.${ext}",
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Calibrate 3D Printer"
+    }
   }
 }
