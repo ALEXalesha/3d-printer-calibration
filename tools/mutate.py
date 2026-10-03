@@ -96,8 +96,9 @@ def main():
     if pool:
         first = pool[0]
         control = ("control", first[1], first[2], first[2], first[4])
-        if run_one(control, js)[1] != "SURVIVED":
-            print("control run is red on an untouched copy - fix the tests first")
+        status = run_one(control, js)[1]
+        if status != "SURVIVED":
+            print("control run failed on an untouched copy:", "pattern not found" if status == "NOT FOUND" else "tests are red")
             return 2
         print("control   untouched copy is green")
     bad = 0

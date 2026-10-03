@@ -65,7 +65,7 @@
   ],
   [
    "template-unknown",
-   "python/calib3d/core/templates.py",
+   "python/calib3d/core/generator.py",
    "        raise TemplateError(unknown)",
    "        pass",
    "test_templates"
