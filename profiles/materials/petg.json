@@ -1,0 +1,27 @@
+{
+  "id": "petg",
+  "type": "PETG",
+  "name": "PETG",
+  "verified": true,
+  "note": "Alexey's tested preset (Generic PETG @Elegoo Centauri)",
+  "tower": {
+    "start": 260,
+    "end": 220,
+    "step": 5
+  },
+  "nozzle_temp": 255,
+  "first_layer_temp": 255,
+  "bed": 80,
+  "flow": 1.0,
+  "mvs": 10.0,
+  "fan": 0.5,
+  "bridge_fan": 1.0,
+  "fan_off_layers": 3,
+  "min_layer_time": 8.0,
+  "pa_default": 0.02,
+  "density": 1.27,
+  "max_flow": [
+    4.0,
+    28.0
+  ]
+}

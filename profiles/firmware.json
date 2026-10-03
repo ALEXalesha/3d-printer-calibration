@@ -1,0 +1,111 @@
+{
+  "_comment": "Every firmware-dependent command lives here and nowhere else in the code. Placeholders: {v} pressure advance (3 decimals), {a} acceleration mm/s2 (integer), {s255} fan 0-255, {s1} fan 0.00-1.00, {total} layers, {n} current layer (1-based). 'signature' lists command words that belong to this firmware only: the G-code check flags them in a profile of another firmware. 'checked' is the date the link was read; null means 'проверить' (not checked against the documentation yet).",
+  "klipper": {
+    "name": "Klipper",
+    "pressure_advance": "SET_PRESSURE_ADVANCE ADVANCE={v}",
+    "accel": [
+      "SET_VELOCITY_LIMIT ACCEL={a}"
+    ],
+    "accel_band": [
+      "SET_VELOCITY_LIMIT ACCEL={a}",
+      "M204 S{a}"
+    ],
+    "layer_progress": "SET_PRINT_STATS_INFO TOTAL_LAYER={total} CURRENT_LAYER={n}",
+    "fan": "M106 S{s255}",
+    "signature": [
+      "SET_PRESSURE_ADVANCE",
+      "SET_VELOCITY_LIMIT",
+      "SET_PRINT_STATS_INFO"
+    ],
+    "docs": {
+      "pressure_advance": {
+        "url": "https://www.klipper3d.org/G-Codes.html#set_pressure_advance",
+        "checked": "2026-10-03"
+      },
+      "accel": {
+        "url": "https://www.klipper3d.org/G-Codes.html#set_velocity_limit",
+        "checked": "2026-10-03"
+      },
+      "accel_band": {
+        "url": "https://www.klipper3d.org/G-Codes.html#g-code-commands",
+        "checked": "2026-10-03"
+      },
+      "layer_progress": {
+        "url": "https://www.klipper3d.org/G-Codes.html#set_print_stats_info",
+        "checked": "2026-10-03"
+      },
+      "fan": {
+        "url": "https://www.klipper3d.org/G-Codes.html#g-code-commands",
+        "checked": "2026-10-03"
+      }
+    }
+  },
+  "marlin": {
+    "name": "Marlin",
+    "pressure_advance": "M900 K{v}",
+    "accel": [
+      "M204 S{a}"
+    ],
+    "accel_band": [
+      "M204 S{a}"
+    ],
+    "layer_progress": null,
+    "fan": "M106 S{s255}",
+    "signature": [
+      "M900"
+    ],
+    "docs": {
+      "pressure_advance": {
+        "url": "https://marlinfw.org/docs/gcode/M900.html",
+        "checked": "2026-10-03"
+      },
+      "accel": {
+        "url": "https://marlinfw.org/docs/gcode/M204.html",
+        "checked": "2026-10-03",
+        "note": "S is the legacy form (print and travel together); still accepted"
+      },
+      "accel_band": {
+        "url": "https://marlinfw.org/docs/gcode/M204.html",
+        "checked": "2026-10-03"
+      },
+      "fan": {
+        "url": "https://marlinfw.org/docs/gcode/M106.html",
+        "checked": "2026-10-03"
+      }
+    }
+  },
+  "rrf": {
+    "name": "RepRapFirmware",
+    "pressure_advance": "M572 D0 S{v}",
+    "accel": [
+      "M204 P{a} T{a}"
+    ],
+    "accel_band": [
+      "M204 P{a} T{a}"
+    ],
+    "layer_progress": null,
+    "fan": "M106 S{s1}",
+    "signature": [
+      "M572"
+    ],
+    "docs": {
+      "pressure_advance": {
+        "url": "https://docs.duet3d.com/User_manual/Reference/Gcodes#m572-set-or-report-extruder-pressure-advance",
+        "checked": null
+      },
+      "accel": {
+        "url": "https://docs.duet3d.com/User_manual/Reference/Gcodes#m204-set-printing-and-travel-accelerations",
+        "checked": null
+      },
+      "accel_band": {
+        "url": "https://docs.duet3d.com/User_manual/Reference/Gcodes#m204-set-printing-and-travel-accelerations",
+        "checked": null
+      },
+      "fan": {
+        "url": "https://docs.duet3d.com/User_manual/Reference/Gcodes#m106-fan-on",
+        "checked": null
+      },
+      "_note": "docs.duet3d.com did not render for the agent on 2026-10-03: проверить"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "tpu",
+  "type": "TPU",
+  "name": "TPU 95A",
+  "verified": false,
+  "note": "generic values; print slowly, direct drive only",
+  "tower": {
+    "start": 240,
+    "end": 200,
+    "step": 5
+  },
+  "nozzle_temp": 225,
+  "first_layer_temp": 225,
+  "bed": 40,
+  "flow": 1.0,
+  "mvs": 3.5,
+  "fan": 0.6,
+  "bridge_fan": 1.0,
+  "fan_off_layers": 1,
+  "min_layer_time": 10.0,
+  "pa_default": 0.05,
+  "density": 1.21,
+  "max_flow": [
+    1.0,
+    9.0
+  ]
+}

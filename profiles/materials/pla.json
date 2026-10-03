@@ -1,0 +1,27 @@
+{
+  "id": "pla",
+  "type": "PLA",
+  "name": "PLA",
+  "verified": true,
+  "note": "Alexey's tested preset (Generic PLA @Elegoo Centauri)",
+  "tower": {
+    "start": 230,
+    "end": 190,
+    "step": 5
+  },
+  "nozzle_temp": 210,
+  "first_layer_temp": 210,
+  "bed": 60,
+  "flow": 0.98,
+  "mvs": 21.0,
+  "fan": 1.0,
+  "bridge_fan": 1.0,
+  "fan_off_layers": 1,
+  "min_layer_time": 4.0,
+  "pa_default": 0.024,
+  "density": 1.24,
+  "max_flow": [
+    8.0,
+    40.0
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "id": "asa",
+  "type": "ASA",
+  "name": "ASA",
+  "verified": false,
+  "note": "generic values",
+  "tower": {
+    "start": 270,
+    "end": 230,
+    "step": 5
+  },
+  "nozzle_temp": 260,
+  "first_layer_temp": 260,
+  "bed": 100,
+  "flow": 0.95,
+  "mvs": 16.0,
+  "fan": 0.3,
+  "bridge_fan": 0.6,
+  "fan_off_layers": 3,
+  "min_layer_time": 10.0,
+  "pa_default": 0.02,
+  "density": 1.07,
+  "max_flow": [
+    4.0,
+    28.0
+  ]
+}

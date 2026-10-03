@@ -1,0 +1,27 @@
+{
+  "id": "abs",
+  "type": "ABS",
+  "name": "ABS",
+  "verified": false,
+  "note": "generic values",
+  "tower": {
+    "start": 260,
+    "end": 220,
+    "step": 5
+  },
+  "nozzle_temp": 250,
+  "first_layer_temp": 250,
+  "bed": 100,
+  "flow": 0.95,
+  "mvs": 16.0,
+  "fan": 0.2,
+  "bridge_fan": 0.5,
+  "fan_off_layers": 3,
+  "min_layer_time": 10.0,
+  "pa_default": 0.02,
+  "density": 1.04,
+  "max_flow": [
+    4.0,
+    28.0
+  ]
+}
