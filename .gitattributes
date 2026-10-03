@@ -1,0 +1,6 @@
+# G-code is compared byte for byte (tests/golden): never touch line endings.
+*.gcode -text -diff
+tests/golden/SHA256SUMS -text
+* text=auto eol=lf
+*.ico binary
+*.png binary

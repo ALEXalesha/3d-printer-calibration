@@ -1,0 +1,22 @@
+# Python
+.venv/
+.ci-venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.hypothesis/
+
+# Node / Electron
+node_modules/
+test-results/
+playwright-report/
+
+# Builds
+build/
+dist/
+release/
+*.spec
+
+# Local scratch
+*.tmp
+/local/

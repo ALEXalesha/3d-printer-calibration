@@ -1,0 +1,31 @@
+# Checks on the home Gitea, on the PC runner (label windows).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: Tests
+    runs-on: windows
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      # The PC's Python 3.13 in its own environment, not setup-python: that one needs
+      # admin rights on the registry, which the runner does not have.
+      - name: Python environment
+        run: |
+          py -3.13 -m venv .ci-venv
+          [IO.File]::AppendAllText($env:GITHUB_PATH, "$((Resolve-Path .ci-venv).Path)\Scripts`n")
+
+      - name: Python dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Python tests (Qt offscreen)
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: python -m pytest -q
