@@ -83,6 +83,34 @@
    "if ok and len(spec) > 2 and not (spec[2] <= v <= spec[3]):",
    "if False:",
    "test_profiles"
+  ],
+  [
+   "params-helper-flow",
+   "python/calib3d/core/params.py",
+   "fixed(material[\"flow\"] * v / 100, 3)",
+   "fixed(v / 100, 3)",
+   "test_params"
+  ],
+  [
+   "params-pa-count",
+   "python/calib3d/core/params.py",
+   "if not 3 <= n <= 31:",
+   "if not 3 <= n <= 1000:",
+   "test_params"
+  ],
+  [
+   "params-ringing-cap",
+   "python/calib3d/core/generator.py",
+   "accels = [a for a in accels if a <= ctx.p[\"max_accel\"]] or",
+   "accels = [a for a in accels] or",
+   "test_params or test_check"
+  ],
+  [
+   "params-summary-minutes",
+   "python/calib3d/core/params.py",
+   "minutes = py_round(res.time / 60)",
+   "minutes = int(res.time / 60)",
+   "test_params"
   ]
  ],
  "js": []

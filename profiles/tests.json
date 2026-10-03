@@ -1,0 +1,463 @@
+{
+ "_comment": "Made by tools/make_tests_json.py. The 10 tests in print order.",
+ "tests": [
+  {
+   "id": "first_layer",
+   "minutes_hint": 11,
+   "fast": false,
+   "name": {
+    "ru": "Первый слой",
+    "en": "First layer"
+   },
+   "look": {
+    "ru": "9 квадратов по столу в один слой: везде ровно, без щелей и борозд.",
+    "en": "9 single-layer squares over the bed: smooth everywhere, no gaps, no ridges."
+   },
+   "result": {
+    "ru": "Если плохо - чистка и выравнивание стола, Z-смещение.",
+    "en": "If not: clean and level the bed, adjust the Z offset."
+   },
+   "helper": null,
+   "params": []
+  },
+  {
+   "id": "temp_tower",
+   "minutes_hint": 75,
+   "fast": false,
+   "name": {
+    "ru": "Башня температур",
+    "en": "Temperature tower"
+   },
+   "look": {
+    "ru": "Уровень с меньше всего нитей, без провиса моста, с гладкими стенками. Температура выдавлена на передней грани.",
+    "en": "The level with the fewest strings, no sagging bridge and smooth walls. The temperature is embossed on the front face."
+   },
+   "result": {
+    "ru": "«Температура сопла» в профиле пластика.",
+    "en": "\"Nozzle temperature\" in the filament profile."
+   },
+   "helper": {
+    "kind": "temp",
+    "input": {
+     "ru": "Лучший уровень (число на грани), °C",
+     "en": "Best level (number on the face), °C"
+    }
+   },
+   "params": [
+    {
+     "key": "t_start",
+     "type": "int",
+     "min": 150,
+     "max": 350,
+     "step": 5,
+     "label": {
+      "ru": "Внизу, °C",
+      "en": "Bottom, °C"
+     }
+    },
+    {
+     "key": "t_end",
+     "type": "int",
+     "min": 150,
+     "max": 350,
+     "step": 5,
+     "label": {
+      "ru": "Вверху, °C",
+      "en": "Top, °C"
+     }
+    },
+    {
+     "key": "t_step",
+     "type": "int",
+     "min": 1,
+     "max": 20,
+     "step": 1,
+     "label": {
+      "ru": "Шаг, °C",
+      "en": "Step, °C"
+     }
+    }
+   ]
+  },
+  {
+   "id": "flow",
+   "minutes_hint": 19,
+   "fast": false,
+   "name": {
+    "ru": "Поток",
+    "en": "Flow"
+   },
+   "look": {
+    "ru": "Плашка с самым гладким верхом: без щелей (мало) и бугров (много).",
+    "en": "The plate with the smoothest top: no gaps (too little) and no bumps (too much)."
+   },
+   "result": {
+    "ru": "«Коэффициент потока» × число / 100.",
+    "en": "\"Flow ratio\" × number / 100."
+   },
+   "helper": {
+    "kind": "flow",
+    "input": {
+     "ru": "Лучшая плашка (число под ней), %",
+     "en": "Best plate (number below it), %"
+    }
+   },
+   "params": [
+    {
+     "key": "f_start",
+     "type": "int",
+     "min": 50,
+     "max": 120,
+     "step": 1,
+     "label": {
+      "ru": "Первая плашка, %",
+      "en": "First plate, %"
+     }
+    },
+    {
+     "key": "f_step",
+     "type": "int",
+     "min": 1,
+     "max": 10,
+     "step": 1,
+     "label": {
+      "ru": "Шаг, %",
+      "en": "Step, %"
+     }
+    }
+   ]
+  },
+  {
+   "id": "pressure_advance",
+   "minutes_hint": 7,
+   "fast": false,
+   "name": {
+    "ru": "Pressure advance",
+    "en": "Pressure advance"
+   },
+   "look": {
+    "ru": "Линия ровной толщины на переходах медленно-быстро. Подпись в тысячных: 025 = 0.025.",
+    "en": "The line of even width at the slow-fast transitions. Label in thousandths: 025 = 0.025."
+   },
+   "result": {
+    "ru": "«Pressure advance» (Klipper), «K» Linear Advance (Marlin), M572 (RRF).",
+    "en": "\"Pressure advance\" (Klipper), Linear Advance \"K\" (Marlin), M572 (RRF)."
+   },
+   "helper": {
+    "kind": "pa",
+    "input": {
+     "ru": "Лучшая линия (подпись справа)",
+     "en": "Best line (label on the right)"
+    }
+   },
+   "params": [
+    {
+     "key": "pa_start",
+     "type": "num",
+     "min": 0,
+     "max": 1.5,
+     "step": 0.005,
+     "label": {
+      "ru": "От",
+      "en": "From"
+     },
+     "digits": 3
+    },
+    {
+     "key": "pa_end",
+     "type": "num",
+     "min": 0.005,
+     "max": 2,
+     "step": 0.005,
+     "label": {
+      "ru": "До",
+      "en": "To"
+     },
+     "digits": 3
+    },
+    {
+     "key": "pa_step",
+     "type": "num",
+     "min": 0.001,
+     "max": 0.1,
+     "step": 0.001,
+     "label": {
+      "ru": "Шаг",
+      "en": "Step"
+     },
+     "digits": 3
+    }
+   ]
+  },
+  {
+   "id": "retraction",
+   "minutes_hint": 32,
+   "fast": false,
+   "name": {
+    "ru": "Откат",
+    "en": "Retraction"
+   },
+   "look": {
+    "ru": "Наименьший откат без нитей между колоннами. Подпись в десятых мм: 08 = 0.8.",
+    "en": "The smallest retraction with no strings between the columns. Label in tenths of mm: 08 = 0.8."
+   },
+   "result": {
+    "ru": "«Длина отката» в профиле принтера.",
+    "en": "\"Retraction length\" in the printer profile."
+   },
+   "helper": {
+    "kind": "retraction",
+    "input": {
+     "ru": "Лучший уровень (подпись на колонне)",
+     "en": "Best level (label on the column)"
+    }
+   },
+   "params": [
+    {
+     "key": "r_start",
+     "type": "num",
+     "min": 0.1,
+     "max": 10,
+     "step": 0.1,
+     "label": {
+      "ru": "Первый уровень, мм",
+      "en": "First level, mm"
+     },
+     "digits": 2
+    },
+    {
+     "key": "r_step",
+     "type": "num",
+     "min": 0.05,
+     "max": 2,
+     "step": 0.05,
+     "label": {
+      "ru": "Шаг, мм",
+      "en": "Step, mm"
+     },
+     "digits": 2
+    },
+    {
+     "key": "r_count",
+     "type": "int",
+     "min": 2,
+     "max": 12,
+     "step": 1,
+     "label": {
+      "ru": "Уровней",
+      "en": "Levels"
+     }
+    }
+   ]
+  },
+  {
+   "id": "max_flow",
+   "minutes_hint": 11,
+   "fast": true,
+   "name": {
+    "ru": "Максимальный расход",
+    "en": "Max volumetric flow"
+   },
+   "look": {
+    "ru": "Высота, где стенка стала рваной или защёлкал экструдер; цифры на стенке - мм³/с.",
+    "en": "The height where the wall turns rough or the extruder clicks; numbers on the wall are mm³/s."
+   },
+   "result": {
+    "ru": "«Макс. объёмная скорость» = 80-90 % от предела.",
+    "en": "\"Max volumetric speed\" = 80-90 % of the limit."
+   },
+   "helper": {
+    "kind": "max_flow",
+    "input": {
+     "ru": "Предел, мм³/с (цифра на стенке)",
+     "en": "Limit, mm³/s (number on the wall)"
+    }
+   },
+   "params": [
+    {
+     "key": "v_start",
+     "type": "num",
+     "min": 0.5,
+     "max": 60,
+     "step": 0.5,
+     "label": {
+      "ru": "Внизу, мм³/с",
+      "en": "Bottom, mm³/s"
+     },
+     "digits": 1
+    },
+    {
+     "key": "v_end",
+     "type": "num",
+     "min": 2,
+     "max": 80,
+     "step": 0.5,
+     "label": {
+      "ru": "Вверху, мм³/с",
+      "en": "Top, mm³/s"
+     },
+     "digits": 1
+    }
+   ]
+  },
+  {
+   "id": "overhang_bridge",
+   "minutes_hint": 56,
+   "fast": false,
+   "name": {
+    "ru": "Нависания и мосты",
+    "en": "Overhangs and bridges"
+   },
+   "look": {
+    "ru": "Наибольший угол нависания без провиса (подписи 20-80° от вертикали); самый длинный ровный мост.",
+    "en": "The largest overhang angle without sagging (labels 20-80° from vertical); the longest clean bridge."
+   },
+   "result": {
+    "ru": "Где нужны поддержки.",
+    "en": "Where supports are needed."
+   },
+   "helper": {
+    "kind": "overhang",
+    "input": {
+     "ru": "Наибольший ровный угол, °",
+     "en": "Largest clean angle, °"
+    }
+   },
+   "params": []
+  },
+  {
+   "id": "ringing",
+   "minutes_hint": 32,
+   "fast": true,
+   "name": {
+    "ru": "Рябь (разгон)",
+    "en": "Ringing (acceleration)"
+   },
+   "look": {
+    "ru": "Пояс, с которого после углов появилась рябь. Номер пояса на передней стенке.",
+    "en": "The band where ripples appear after the corners. The band number is on the front wall."
+   },
+   "result": {
+    "ru": "Разгон наружных стенок - на пояс ниже.",
+    "en": "Outer wall acceleration - one band lower."
+   },
+   "helper": {
+    "kind": "ringing",
+    "input": {
+     "ru": "Номер пояса, где появилась рябь",
+     "en": "Band number where ringing starts"
+    }
+   },
+   "params": [
+    {
+     "key": "a_start",
+     "type": "int",
+     "min": 100,
+     "max": 50000,
+     "step": 100,
+     "label": {
+      "ru": "Первый пояс, мм/с²",
+      "en": "First band, mm/s²"
+     }
+    },
+    {
+     "key": "a_step",
+     "type": "int",
+     "min": 100,
+     "max": 10000,
+     "step": 100,
+     "label": {
+      "ru": "Шаг, мм/с²",
+      "en": "Step, mm/s²"
+     }
+    },
+    {
+     "key": "a_count",
+     "type": "int",
+     "min": 2,
+     "max": 16,
+     "step": 1,
+     "label": {
+      "ru": "Поясов",
+      "en": "Bands"
+     }
+    }
+   ]
+  },
+  {
+   "id": "tolerance",
+   "minutes_hint": 45,
+   "fast": false,
+   "name": {
+    "ru": "Зазоры",
+    "en": "Tolerances"
+   },
+   "look": {
+    "ru": "Наименьший зазор, где штырь выходит из рамки. Подпись в сотых мм: 15 = 0.15.",
+    "en": "The smallest gap where the peg comes out of its frame. Label in hundredths of mm: 15 = 0.15."
+   },
+   "result": {
+    "ru": "Зазор для подвижных и вставных деталей.",
+    "en": "Clearance for moving and press-fit parts."
+   },
+   "helper": {
+    "kind": "tolerance",
+    "input": {
+     "ru": "Наименьший рабочий зазор (подпись)",
+     "en": "Smallest working gap (label)"
+    }
+   },
+   "params": [
+    {
+     "key": "gaps",
+     "type": "list",
+     "min": 0.02,
+     "max": 1.0,
+     "step": 0.01,
+     "label": {
+      "ru": "Зазоры, мм (через пробел)",
+      "en": "Gaps, mm (space separated)"
+     },
+     "digits": 2
+    }
+   ]
+  },
+  {
+   "id": "cube",
+   "minutes_hint": 18,
+   "fast": false,
+   "name": {
+    "ru": "Кубик",
+    "en": "Cube"
+   },
+   "look": {
+    "ru": "Размеры по X, Y, Z штангенциркулем (передняя грань - с числом).",
+    "en": "Measure X, Y, Z with calipers (the front face has the number)."
+   },
+   "result": {
+    "ru": "Все стороны одинаково меньше или больше - поток или усадка; одна ось - натяжение её ремня.",
+    "en": "All sides equally off - flow or shrinkage; one axis only - that axis' belt tension."
+   },
+   "helper": {
+    "kind": "cube",
+    "input": {
+     "ru": "Измерено X Y Z, мм",
+     "en": "Measured X Y Z, mm"
+    }
+   },
+   "params": [
+    {
+     "key": "size",
+     "type": "int",
+     "min": 10,
+     "max": 40,
+     "step": 1,
+     "label": {
+      "ru": "Размер, мм",
+      "en": "Size, mm"
+     }
+    }
+   ]
+  }
+ ]
+}
