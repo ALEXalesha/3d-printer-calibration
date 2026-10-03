@@ -122,7 +122,7 @@ def test_combo_arrow_drawn_and_no_fusion_square(win, qapp):
     combo = win.lang_combo
     img = combo.grab().toImage()
     w, h = img.width(), img.height()
-    bg = QColor(img.pixel(w // 3, h // 2))
+    bg = QColor(img.pixel(w - 5, h // 2))     # inside the field, right of the arrow, no text
     arrow = [QColor(img.pixel(x, h // 2)) for x in range(w - 20, w - 8)]
     assert any(abs(c.lightness() - bg.lightness()) > 40 for c in arrow), "no arrow"
     for y in range(4, h - 4):

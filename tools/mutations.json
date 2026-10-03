@@ -146,6 +146,41 @@
    "return key + \"={first_layer_nozzle_temp}\"",
    "return mm.group(0)",
    "test_import"
+  ],
+  [
+   "ui-combo-arrow",
+   "python/calib3d/ui/theme.py",
+   "        p.drawPolygon([QPointF(cx - 5, cy - 2.5)",
+   "        0 and p.drawPolygon([QPointF(cx - 5, cy - 2.5)",
+   "test_combo_arrow"
+  ],
+  [
+   "ui-zip-names",
+   "python/calib3d/ui/app.py",
+   "z.writestr(name, text.encode(\"utf-8\"))",
+   "z.writestr(name + \".txt\", text.encode(\"utf-8\"))",
+   "test_save_folder_and_zip"
+  ],
+  [
+   "ui-missing-mark",
+   "python/calib3d/ui/app.py",
+   "w.setProperty(\"missing\", path in missing)",
+   "w.setProperty(\"missing\", False)",
+   "test_import_marks_missing"
+  ],
+  [
+   "ui-label-fixed",
+   "python/calib3d/ui/app.py",
+   "    lab.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)\n    return lab",
+   "    lab.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)\n    lab.setMaximumHeight(18)\n    return lab",
+   "test_wrapped_labels"
+  ],
+  [
+   "ui-theme-token",
+   "python/calib3d/ui/theme.py",
+   "text=\"#e6e8ec\", dim=0.55, accent=\"#4a7ab8\"",
+   "text=\"#e6e8ec\", dim=0.55, accent=\"#4a7ab9\"",
+   "test_tokens_match_css"
   ]
  ],
  "js": []

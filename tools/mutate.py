@@ -43,7 +43,8 @@ def load_extra():
 
 
 def copy_project(dst: Path):
-    for part in ("python", "profiles", "tests", "web/js/core", "VERSION", "pytest.ini", "package.json"):
+    for part in ("python", "profiles", "tests", "web/js", "web/css", "web/index.html", "assets", "VERSION",
+                 "pytest.ini", "package.json", "README.md", "README.ru.md", "LICENSE"):
         src = ROOT / part
         if not src.exists():
             continue
@@ -78,6 +79,8 @@ def run_one(m, js):
         try:
             r = subprocess.run(cmd, cwd=tmp, env=env, capture_output=True, text=True, timeout=900)
             caught = r.returncode != 0
+            if name == "control" and caught:
+                print((r.stdout + r.stderr)[-3000:])
         except subprocess.TimeoutExpired:
             caught = True
         finally:

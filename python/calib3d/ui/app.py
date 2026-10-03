@@ -12,7 +12,7 @@ import zipfile
 from pathlib import Path
 
 from PySide6.QtCore import QLocale, QObject, Qt, QTimer, Signal
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont, QIcon
 from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QButtonGroup, QCheckBox, QDoubleSpinBox,
                                QFileDialog, QFrame, QGridLayout, QHBoxLayout, QHeaderView, QLabel, QLineEdit,
                                QListWidget, QListWidgetItem, QMainWindow, QPlainTextEdit, QPushButton,
@@ -1283,6 +1283,10 @@ def main(argv=None):
     app = QApplication.instance() or QApplication(sys.argv if argv is None else argv)
     app.setApplicationName("Calibrate3dPrinter")
     app.setFont(QFont("Segoe UI", 10))
+    base = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parents[3]))
+    icon = base / "assets" / "icon.png"
+    if icon.exists():
+        app.setWindowIcon(QIcon(str(icon)))
     win = MainWindow()
     win.show_remembered()
     return app.exec()
