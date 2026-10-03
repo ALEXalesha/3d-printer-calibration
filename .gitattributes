@@ -4,3 +4,4 @@ tests/golden/SHA256SUMS -text
 * text=auto eol=lf
 *.ico binary
 *.png binary
+reference/** -text
