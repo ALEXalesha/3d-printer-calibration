@@ -1,0 +1,60 @@
+{
+  "id": "generic-rrf",
+  "name": "Generic RepRapFirmware",
+  "prefix": "GRR",
+  "verified": false,
+  "source": "Generic profile of this project: minimal safe start code, no vendor commands.",
+  "bed": {
+    "x": 230.0,
+    "y": 230.0,
+    "z": 250.0,
+    "origin": "corner",
+    "shape": "rect"
+  },
+  "nozzle": 0.4,
+  "filament_diameter": 1.75,
+  "firmware": "rrf",
+  "max_speed": 300.0,
+  "max_accel": 5000,
+  "default_accel": 2000,
+  "travel_speed": 200.0,
+  "z_speed": 10.0,
+  "retract": {
+    "length": 0.8,
+    "speed": 35.0,
+    "z_hop": 0.4
+  },
+  "options": {},
+  "start_gcode": [
+    "; Start code made by Calibrate 3D Printer: home, heat, purge line. Compare it with your slicer's.",
+    "G90",
+    "M83",
+    "M140 S{bed_temp}",
+    "M104 S150",
+    "G28",
+    "M190 S{bed_temp}",
+    "M109 S{first_layer_nozzle_temp}",
+    "{set_accel}",
+    "G92 E0",
+    "G1 Z5 F{z_f}",
+    "G1 X{purge_x0} Y{purge_y0} F{travel_f}",
+    "G1 Z0.3 F{z_f}",
+    "G1 X{purge_x1} Y{purge_y1} E{purge_e} F1500",
+    "G1 X{purge_x2} Y{purge_y2} F{travel_f}",
+    "G1 X{purge_x3} Y{purge_y3} E{purge_e} F1500",
+    "G92 E0",
+    "G1 Z2 F{z_f}"
+  ],
+  "end_gcode": [
+    "; End code made by Calibrate 3D Printer",
+    "M104 S0",
+    "M140 S0",
+    "M106 S0",
+    "G91",
+    "G1 E-2 F1800",
+    "G90",
+    "G1 Z{park_z} F{z_f}",
+    "G1 X{park_x} Y{park_y} F{travel_f}",
+    "M84"
+  ]
+}

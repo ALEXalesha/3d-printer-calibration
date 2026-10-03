@@ -107,7 +107,7 @@ def _check_field(d, spec, errors, required=True):
     elif kind == "enum":
         ok = v in spec[2]
     elif kind == "lines":
-        ok = isinstance(v, list) and all(isinstance(s, str) for s in v)
+        ok = isinstance(v, list) and len(v) > 0 and all(isinstance(s, str) for s in v)
     elif kind == "list":
         ok = isinstance(v, list) and len(v) == 2 and all(_num(x) and spec[2] <= x <= spec[3] for x in v) and v[0] < v[1]
     elif kind == "flags":
