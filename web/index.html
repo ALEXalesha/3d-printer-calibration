@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calibrate 3D Printer</title>
+  <meta name="description" content="Ready calibration G-code for any FDM printer, no slicer needed. Works offline.">
+  <link rel="icon" href="favicon.png">
+  <link rel="stylesheet" href="css/themes.css">
+  <link rel="stylesheet" href="css/app.css">
+  <script>
+    // Theme before the first paint: otherwise the page flashes in the default theme.
+    try {
+      var t = localStorage.getItem('calib3d-theme');
+      if (t && t !== 'glass' && /^(formal|light|night|warm)$/.test(t)) document.documentElement.setAttribute('data-theme', t);
+    } catch (e) { /* storage blocked: default theme */ }
+  </script>
+</head>
+<body>
+  <div id="app" class="app">
+    <header class="top">
+      <div class="brand">
+        <img src="favicon.png" alt="" width="34" height="34">
+        <div>
+          <h1 id="title"></h1>
+          <p id="subtitle" class="dim"></p>
+        </div>
+      </div>
+      <div class="controls">
+        <label><span id="theme-label" class="dim"></span> <select id="theme"></select></label>
+        <label><span id="lang-label" class="dim"></span> <select id="lang"><option value="ru">Русский</option><option value="en">English</option></select></label>
+      </div>
+    </header>
+    <nav id="steps" class="steps" role="tablist"></nav>
+    <main id="pages"></main>
+    <footer class="nav">
+      <button id="back" type="button"></button>
+      <button id="next" type="button" class="primary"></button>
+    </footer>
+  </div>
+  <script src="js/core/data.js"></script>
+  <script src="js/core/num.js"></script>
+  <script src="js/core/templates.js"></script>
+  <script src="js/core/profiles.js"></script>
+  <script src="js/core/gcode_sim.js"></script>
+  <script src="js/core/params.js"></script>
+  <script src="js/core/generator.js"></script>
+  <script src="js/core/check.js"></script>
+  <script src="js/core/importer.js"></script>
+  <script src="js/core/preview.js"></script>
+  <script src="vendor/three.js"></script>
+  <script src="js/ui/zip.js"></script>
+  <script src="js/ui/views.js"></script>
+  <script src="js/ui/app.js"></script>
+</body>
+</html>

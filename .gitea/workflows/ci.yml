@@ -35,3 +35,6 @@ jobs:
 
       - name: JavaScript core (node:test)
         run: npm test
+
+      - name: Page in headless Chromium (Playwright, one worker)
+        run: npx playwright test --workers=1
