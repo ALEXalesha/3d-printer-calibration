@@ -1,0 +1,583 @@
+{
+ "_comment": "Made by tools/make_ui_text.py. Interface strings, Russian and English.",
+ "app_title": {
+  "ru": "Калибровка 3D-принтера",
+  "en": "Calibrate 3D Printer"
+ },
+ "app_sub": {
+  "ru": "Готовые калибровочные G-code для любого FDM-принтера, без слайсера",
+  "en": "Ready calibration G-code for any FDM printer, no slicer needed"
+ },
+ "theme": {
+  "ru": "Тема",
+  "en": "Theme"
+ },
+ "language": {
+  "ru": "Язык",
+  "en": "Language"
+ },
+ "theme_glass": {
+  "ru": "Стеклянная",
+  "en": "Glass"
+ },
+ "theme_formal": {
+  "ru": "Строгая",
+  "en": "Formal"
+ },
+ "theme_light": {
+  "ru": "Светлая",
+  "en": "Light"
+ },
+ "theme_night": {
+  "ru": "Ночная",
+  "en": "Night"
+ },
+ "theme_warm": {
+  "ru": "Тёплая",
+  "en": "Warm"
+ },
+ "step_printer": {
+  "ru": "1. Принтер",
+  "en": "1. Printer"
+ },
+ "step_material": {
+  "ru": "2. Пластик",
+  "en": "2. Material"
+ },
+ "step_tests": {
+  "ru": "3. Тесты",
+  "en": "3. Tests"
+ },
+ "step_download": {
+  "ru": "4. Скачать",
+  "en": "4. Download"
+ },
+ "step_results": {
+  "ru": "Результаты",
+  "en": "Results"
+ },
+ "next": {
+  "ru": "Дальше",
+  "en": "Next"
+ },
+ "back": {
+  "ru": "Назад",
+  "en": "Back"
+ },
+ "import_title": {
+  "ru": "Загрузить свой G-code",
+  "en": "Load your G-code"
+ },
+ "import_hint": {
+  "ru": "Выберите файл, который ваш принтер уже хорошо напечатал. Программа возьмёт из него начальный и конечный код, стол, сопло, пруток, прошивку и температуры.",
+  "en": "Pick a file your printer has already printed well. The program takes the start and end code, bed, nozzle, filament, firmware and temperatures from it."
+ },
+ "import_button": {
+  "ru": "Выбрать G-code…",
+  "en": "Choose G-code…"
+ },
+ "import_done": {
+  "ru": "Импортировано из {file} ({slicer}).",
+  "en": "Imported from {file} ({slicer})."
+ },
+ "import_replaced": {
+  "ru": "Заменено подстановками: {n}",
+  "en": "Replaced with placeholders: {n}"
+ },
+ "import_missing": {
+  "ru": "Не найдено, заполните сами: {fields}",
+  "en": "Not found, fill in yourself: {fields}"
+ },
+ "import_all_found": {
+  "ru": "Найдено всё нужное.",
+  "en": "Everything needed was found."
+ },
+ "import_bambu": {
+  "ru": "Bambu Lab: у прошивки свой диалект G-code. Непроверено - первую печать под присмотром.",
+  "en": "Bambu Lab: the firmware has its own G-code dialect. Not checked - watch the first print."
+ },
+ "import_fw_unknown": {
+  "ru": "Прошивку определить не удалось - выберите её сами.",
+  "en": "Could not tell the firmware - choose it yourself."
+ },
+ "import_failed": {
+  "ru": "Не удалось прочитать файл: {error}",
+  "en": "Could not read the file: {error}"
+ },
+ "profile": {
+  "ru": "Профиль",
+  "en": "Profile"
+ },
+ "verified": {
+  "ru": "проверен на принтере",
+  "en": "checked on a real printer"
+ },
+ "unverified": {
+  "ru": "непроверено",
+  "en": "not checked"
+ },
+ "unverified_hint": {
+  "ru": "Этот профиль не проверен на настоящем принтере. Проверьте его импортом своего G-code.",
+  "en": "This profile was not checked on a real printer. Check it by importing your own G-code."
+ },
+ "my_profile": {
+  "ru": "мой",
+  "en": "mine"
+ },
+ "name": {
+  "ru": "Название",
+  "en": "Name"
+ },
+ "prefix": {
+  "ru": "Префикс файлов",
+  "en": "File prefix"
+ },
+ "bed_x": {
+  "ru": "Стол X, мм",
+  "en": "Bed X, mm"
+ },
+ "bed_y": {
+  "ru": "Стол Y, мм",
+  "en": "Bed Y, mm"
+ },
+ "bed_z": {
+  "ru": "Высота Z, мм",
+  "en": "Height Z, mm"
+ },
+ "origin": {
+  "ru": "Начало координат",
+  "en": "Origin"
+ },
+ "origin_corner": {
+  "ru": "угол",
+  "en": "corner"
+ },
+ "origin_center": {
+  "ru": "центр",
+  "en": "centre"
+ },
+ "shape": {
+  "ru": "Форма стола",
+  "en": "Bed shape"
+ },
+ "shape_rect": {
+  "ru": "прямоугольник",
+  "en": "rectangle"
+ },
+ "shape_round": {
+  "ru": "круг",
+  "en": "round"
+ },
+ "nozzle": {
+  "ru": "Сопло, мм",
+  "en": "Nozzle, mm"
+ },
+ "filament": {
+  "ru": "Пруток, мм",
+  "en": "Filament, mm"
+ },
+ "firmware": {
+  "ru": "Прошивка",
+  "en": "Firmware"
+ },
+ "max_speed": {
+  "ru": "Макс. скорость, мм/с",
+  "en": "Max speed, mm/s"
+ },
+ "max_accel": {
+  "ru": "Макс. разгон, мм/с²",
+  "en": "Max acceleration, mm/s²"
+ },
+ "default_accel": {
+  "ru": "Обычный разгон, мм/с²",
+  "en": "Default acceleration, mm/s²"
+ },
+ "travel_speed": {
+  "ru": "Переезды, мм/с",
+  "en": "Travel, mm/s"
+ },
+ "z_speed": {
+  "ru": "Скорость Z, мм/с",
+  "en": "Z speed, mm/s"
+ },
+ "retract_length": {
+  "ru": "Откат, мм",
+  "en": "Retraction, mm"
+ },
+ "retract_speed": {
+  "ru": "Скорость отката, мм/с",
+  "en": "Retraction speed, mm/s"
+ },
+ "z_hop": {
+  "ru": "Подъём Z, мм",
+  "en": "Z hop, mm"
+ },
+ "opt_canvas": {
+  "ru": "Подача CANVAS (M6211)",
+  "en": "CANVAS feeder (M6211)"
+ },
+ "opt_nozzle_wipe": {
+  "ru": "Чистка сопла (M729)",
+  "en": "Nozzle wipe (M729)"
+ },
+ "start_code": {
+  "ru": "Начальный код",
+  "en": "Start code"
+ },
+ "end_code": {
+  "ru": "Конечный код",
+  "en": "End code"
+ },
+ "placeholders_hint": {
+  "ru": "Подстановки: {nozzle_temp} {first_layer_nozzle_temp} {bed_temp} {max_z} {max_z_plus_50_capped} {filament_type} {layer_height} {print_title} {total_layers}; строка с {?флаг} - по условию.",
+  "en": "Placeholders: {nozzle_temp} {first_layer_nozzle_temp} {bed_temp} {max_z} {max_z_plus_50_capped} {filament_type} {layer_height} {print_title} {total_layers}; a line starting with {?flag} is conditional."
+ },
+ "save_profile": {
+  "ru": "Сохранить как свой",
+  "en": "Save as mine"
+ },
+ "delete_profile": {
+  "ru": "Удалить свой",
+  "en": "Delete mine"
+ },
+ "export_json": {
+  "ru": "Экспорт JSON",
+  "en": "Export JSON"
+ },
+ "import_json": {
+  "ru": "Импорт JSON",
+  "en": "Import JSON"
+ },
+ "saved": {
+  "ru": "Сохранено: {name}",
+  "en": "Saved: {name}"
+ },
+ "profile_errors": {
+  "ru": "Ошибки профиля: {errors}",
+  "en": "Profile errors: {errors}"
+ },
+ "section_bed": {
+  "ru": "Стол и механика",
+  "en": "Bed and motion"
+ },
+ "section_code": {
+  "ru": "Начальный и конечный код",
+  "en": "Start and end code"
+ },
+ "source": {
+  "ru": "Источник",
+  "en": "Source"
+ },
+ "material": {
+  "ru": "Пластик",
+  "en": "Material"
+ },
+ "mat_generic": {
+  "ru": "общие значения",
+  "en": "generic values"
+ },
+ "mat_verified": {
+  "ru": "проверенные настройки",
+  "en": "tested settings"
+ },
+ "mat_type": {
+  "ru": "Тип",
+  "en": "Type"
+ },
+ "tower_start": {
+  "ru": "Башня: внизу, °C",
+  "en": "Tower: bottom, °C"
+ },
+ "tower_end": {
+  "ru": "Башня: вверху, °C",
+  "en": "Tower: top, °C"
+ },
+ "tower_step": {
+  "ru": "Башня: шаг, °C",
+  "en": "Tower: step, °C"
+ },
+ "nozzle_temp": {
+  "ru": "Сопло, °C",
+  "en": "Nozzle, °C"
+ },
+ "first_layer_temp": {
+  "ru": "Сопло, первый слой, °C",
+  "en": "Nozzle, first layer, °C"
+ },
+ "bed_temp": {
+  "ru": "Стол, °C",
+  "en": "Bed, °C"
+ },
+ "flow": {
+  "ru": "Поток",
+  "en": "Flow ratio"
+ },
+ "mvs": {
+  "ru": "Макс. расход, мм³/с",
+  "en": "Max flow, mm³/s"
+ },
+ "fan": {
+  "ru": "Вентилятор, 0-1",
+  "en": "Fan, 0-1"
+ },
+ "bridge_fan": {
+  "ru": "Вентилятор на мостах, 0-1",
+  "en": "Bridge fan, 0-1"
+ },
+ "fan_off_layers": {
+  "ru": "Слоёв без вентилятора",
+  "en": "Layers without fan"
+ },
+ "min_layer_time": {
+  "ru": "Мин. время слоя, с",
+  "en": "Min layer time, s"
+ },
+ "pa_default": {
+  "ru": "Pressure advance",
+  "en": "Pressure advance"
+ },
+ "density": {
+  "ru": "Плотность, г/см³",
+  "en": "Density, g/cm³"
+ },
+ "max_flow_from": {
+  "ru": "Тест расхода: от, мм³/с",
+  "en": "Flow test: from, mm³/s"
+ },
+ "max_flow_to": {
+  "ru": "Тест расхода: до, мм³/с",
+  "en": "Flow test: to, mm³/s"
+ },
+ "tests_hint": {
+  "ru": "Отметьте тесты. У каждого - предпросмотр, время и граммы.",
+  "en": "Tick the tests. Each has a preview, time and grams."
+ },
+ "select_all": {
+  "ru": "Все",
+  "en": "All"
+ },
+ "select_none": {
+  "ru": "Ни одного",
+  "en": "None"
+ },
+ "minutes": {
+  "ru": "мин",
+  "en": "min"
+ },
+ "grams": {
+  "ru": "г",
+  "en": "g"
+ },
+ "time_grams": {
+  "ru": "~{time}, ~{grams} г",
+  "en": "~{time}, ~{grams} g"
+ },
+ "hours_minutes": {
+  "ru": "{h} ч {m} мин",
+  "en": "{h} h {m} min"
+ },
+ "only_minutes": {
+  "ru": "{m} мин",
+  "en": "{m} min"
+ },
+ "look_for": {
+  "ru": "Что искать",
+  "en": "What to look for"
+ },
+ "result_where": {
+  "ru": "Куда результат",
+  "en": "Where the result goes"
+ },
+ "params": {
+  "ru": "Параметры",
+  "en": "Parameters"
+ },
+ "preview_top": {
+  "ru": "Вид сверху",
+  "en": "Top view"
+ },
+ "preview_front": {
+  "ru": "Вид спереди",
+  "en": "Front view"
+ },
+ "preview_3d": {
+  "ru": "3D",
+  "en": "3D"
+ },
+ "layer_upto": {
+  "ru": "До слоя",
+  "en": "Up to layer"
+ },
+ "fast_warning": {
+  "ru": "Печатается нарочно быстро: следите за первыми минутами и остановите, если экструдер сильно щёлкает.",
+  "en": "Printed fast on purpose: watch the first minutes and stop if the extruder clicks hard."
+ },
+ "computing": {
+  "ru": "Считаю…",
+  "en": "Computing…"
+ },
+ "gen_error": {
+  "ru": "Ошибка: {error}",
+  "en": "Error: {error}"
+ },
+ "does_not_fit": {
+  "ru": "Не помещается на стол",
+  "en": "Does not fit the bed"
+ },
+ "check_failed": {
+  "ru": "Проверка G-code: {problems}",
+  "en": "G-code check: {problems}"
+ },
+ "check_ok": {
+  "ru": "Проверка G-code пройдена",
+  "en": "G-code check passed"
+ },
+ "download_hint": {
+  "ru": "Файлы для выбранных тестов. Имена: <префикс>_<сопло>_<тест>_<пластик>_<диапазон>.gcode",
+  "en": "Files for the selected tests. Names: <prefix>_<nozzle>_<test>_<material>_<range>.gcode"
+ },
+ "save_folder": {
+  "ru": "Сохранить в папку…",
+  "en": "Save to folder…"
+ },
+ "save_zip": {
+  "ru": "Сохранить архивом (zip)…",
+  "en": "Save as zip…"
+ },
+ "download_one": {
+  "ru": "Скачать",
+  "en": "Download"
+ },
+ "download_zip": {
+  "ru": "Скачать все (zip)",
+  "en": "Download all (zip)"
+ },
+ "saved_files": {
+  "ru": "Сохранено файлов: {n} в {path}",
+  "en": "Saved {n} files to {path}"
+ },
+ "nothing_selected": {
+  "ru": "Не выбрано ни одного теста.",
+  "en": "No test selected."
+ },
+ "print_order": {
+  "ru": "Порядок печати",
+  "en": "Print order"
+ },
+ "col_n": {
+  "ru": "№",
+  "en": "#"
+ },
+ "col_test": {
+  "ru": "Тест",
+  "en": "Test"
+ },
+ "col_file": {
+  "ru": "Файл",
+  "en": "File"
+ },
+ "col_time": {
+  "ru": "Время",
+  "en": "Time"
+ },
+ "col_look": {
+  "ru": "Что ищем",
+  "en": "What to look for"
+ },
+ "col_result": {
+  "ru": "Куда результат",
+  "en": "Where it goes"
+ },
+ "total": {
+  "ru": "Всего: {n} файлов, ~{time}, ~{grams} г",
+  "en": "Total: {n} files, ~{time}, ~{grams} g"
+ },
+ "watch_first": {
+  "ru": "G-code проверен расчётом, а не на вашем принтере: первую печать каждого теста - под присмотром.",
+  "en": "The G-code is checked by calculation, not on your printer: watch the first print of each test."
+ },
+ "results_hint": {
+  "ru": "Напечатали тест? Впишите лучший уровень или линию - программа даст число для профиля слайсера.",
+  "en": "Printed a test? Enter the best level or line - the program gives the number for your slicer profile."
+ },
+ "helper_input": {
+  "ru": "Ваш ответ",
+  "en": "Your answer"
+ },
+ "helper_temp": {
+  "ru": "«Температура сопла» в профиле пластика: {value} °C",
+  "en": "\"Nozzle temperature\" in the filament profile: {value} °C"
+ },
+ "helper_flow": {
+  "ru": "«Коэффициент потока» в профиле пластика: {value}",
+  "en": "\"Flow ratio\" in the filament profile: {value}"
+ },
+ "helper_pa": {
+  "ru": "«Pressure advance» (Klipper) / K (Marlin) / M572 (RRF): {value}",
+  "en": "\"Pressure advance\" (Klipper) / K (Marlin) / M572 (RRF): {value}"
+ },
+ "helper_retraction": {
+  "ru": "«Длина отката» в профиле принтера: {value} мм",
+  "en": "\"Retraction length\" in the printer profile: {value} mm"
+ },
+ "helper_max_flow": {
+  "ru": "«Макс. объёмная скорость» в профиле пластика: {value} мм³/с (85 % от предела)",
+  "en": "\"Max volumetric speed\" in the filament profile: {value} mm³/s (85 % of the limit)"
+ },
+ "helper_overhang": {
+  "ru": "Поддержки нужны для нависаний положе: порог поддержек {value}° от горизонтали",
+  "en": "Supports are needed for flatter overhangs: support threshold {value}° from horizontal"
+ },
+ "helper_ringing": {
+  "ru": "«Разгон наружных стенок»: {value} мм/с²",
+  "en": "\"Outer wall acceleration\": {value} mm/s²"
+ },
+ "helper_ringing_first": {
+  "ru": "Рябь уже на первом поясе: попробуйте {value} мм/с² и проверьте натяжение ремней",
+  "en": "Ringing already in the first band: try {value} mm/s² and check belt tension"
+ },
+ "helper_tolerance": {
+  "ru": "Зазор для подвижных и вставных деталей: {value} мм",
+  "en": "Clearance for moving and press-fit parts: {value} mm"
+ },
+ "helper_cube_ok": {
+  "ru": "Размеры в пределах 0.1 мм - всё в порядке",
+  "en": "Sizes within 0.1 mm - all good"
+ },
+ "helper_cube_flow": {
+  "ru": "X и Y одинаково отличаются: поток или усадка. Попробуйте коэффициент потока {value}",
+  "en": "X and Y are off the same way: flow or shrinkage. Try flow ratio {value}"
+ },
+ "helper_cube_axis": {
+  "ru": "Отличается только ось {value}: проверьте натяжение ремня этой оси",
+  "en": "Only axis {value} is off: check that axis' belt tension"
+ },
+ "need_number": {
+  "ru": "Впишите число",
+  "en": "Enter a number"
+ },
+ "need_three": {
+  "ru": "Впишите три числа: X Y Z",
+  "en": "Enter three numbers: X Y Z"
+ },
+ "out_of_range": {
+  "ru": "Такого уровня в тесте нет",
+  "en": "The test has no such level"
+ },
+ "no_helper": {
+  "ru": "Для этого теста число не нужно - смотрите подсказку",
+  "en": "No number for this test - see the hint"
+ },
+ "about": {
+  "ru": "О программе",
+  "en": "About"
+ },
+ "version": {
+  "ru": "Версия {v}",
+  "en": "Version {v}"
+ },
+ "offline": {
+  "ru": "Всё работает без сети, ничего никуда не отправляется.",
+  "en": "Works offline, nothing is sent anywhere."
+ }
+}
