@@ -1,0 +1,89 @@
+{
+ "py": [
+  [
+   "check-negative-e",
+   "python/calib3d/core/check.py",
+   "bad(\"extrusion\", f\"line {i + 1}: negative E on a move\")",
+   "pass",
+   "test_check"
+  ],
+  [
+   "check-foreign",
+   "python/calib3d/core/check.py",
+   "return foreign - allowed",
+   "return set()",
+   "test_check"
+  ],
+  [
+   "check-bed",
+   "python/calib3d/core/check.py",
+   "def _inside(printer, x, y, margin):\n",
+   "def _inside(printer, x, y, margin):\n    return True\n",
+   "test_check"
+  ],
+  [
+   "check-min-time",
+   "python/calib3d/core/check.py",
+   "MIN_TIME_SHARE = 0.7",
+   "MIN_TIME_SHARE = 0.0",
+   "test_check"
+  ],
+  [
+   "check-placeholder",
+   "python/calib3d/core/check.py",
+   "m = _BRACES.search(line)",
+   "m = None",
+   "test_check"
+  ],
+  [
+   "scale-width",
+   "python/calib3d/core/generator.py",
+   "self.W = py_round(1.125 * n, 3)",
+   "self.W = py_round(1.0 * n, 3)",
+   "test_scaling or test_golden"
+  ],
+  [
+   "scale-tower-level",
+   "python/calib3d/core/generator.py",
+   "LEVEL = py_round(layers_per_level * H, 3)",
+   "LEVEL = 10.0",
+   "test_scaling"
+  ],
+  [
+   "scale-filament",
+   "python/calib3d/core/generator.py",
+   "self.FIL_AREA = math.pi * sq(printer[\"filament_diameter\"] / 2)",
+   "self.FIL_AREA = math.pi * sq(1.75 / 2)",
+   "test_scaling"
+  ],
+  [
+   "template-negation",
+   "python/calib3d/core/templates.py",
+   "if m.group(1) == \"!\":",
+   "if m.group(1) == \"?\":",
+   "test_templates"
+  ],
+  [
+   "template-unknown",
+   "python/calib3d/core/templates.py",
+   "        raise TemplateError(unknown)",
+   "        pass",
+   "test_templates"
+  ],
+  [
+   "template-canvas-flag",
+   "profiles/printers/elegoo-centauri-carbon.json",
+   "\"{?canvas}M6211",
+   "\"M6211",
+   "test_templates"
+  ],
+  [
+   "profile-schema-range",
+   "python/calib3d/core/profiles.py",
+   "if ok and len(spec) > 2 and not (spec[2] <= v <= spec[3]):",
+   "if False:",
+   "test_profiles"
+  ]
+ ],
+ "js": []
+}

@@ -129,6 +129,11 @@ def check(text, printer, material, test_id, body_start=None, body_end=None, max_
             layer_no += 1
             layer_time = 0.0
             layer_floor = True
+        if in_body and line.startswith(";Z:"):
+            lz = float(line[3:])
+            if lz <= last_layer_z:
+                bad("layers", f"line {i + 1}: layer Z {lz:g} not above {last_layer_z:g}")
+            last_layer_z = lz
         if head is None:
             continue
         if head in foreign:
@@ -194,11 +199,6 @@ def check(text, printer, material, test_id, body_start=None, body_end=None, max_
                             bad("retraction", f"line {i + 1}: back {e:g} after retract {retracted:g}")
                         retracted = 0.0
             x, y, z = nx, ny, nz
-        if in_body and line.startswith(";Z:"):
-            lz = float(line[3:])
-            if lz <= last_layer_z:
-                bad("layers", f"line {i + 1}: layer Z {lz:g} not above {last_layer_z:g}")
-            last_layer_z = lz
     close_layer()
     return problems
 
