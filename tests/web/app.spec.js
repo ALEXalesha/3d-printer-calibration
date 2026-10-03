@@ -241,3 +241,25 @@ test('ids are unique and every field has a label', async ({ page }) => {
   expect(r.dup).toEqual([]);
   expect(r.unlabeled).toEqual([]);
 });
+
+test('buttons and text readable in every theme', async ({ page }) => {
+  await open(page);
+  for (const theme of ['glass', 'formal', 'light', 'night', 'warm']) {
+    await page.selectOption('#theme', theme);
+    const r = await page.evaluate(() => {
+      const rgb = (s) => (s.match(/[\d.]+/g) || []).slice(0, 3).map(Number);
+      const lum = (c) => {
+        const v = c.map((x) => x / 255).map((x) => (x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4));
+        return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+      };
+      const ratio = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+      const out = {};
+      for (const sel of ['#next', '#import-button']) {
+        const st = getComputedStyle(document.querySelector(sel));
+        out[sel] = ratio(rgb(st.color), rgb(st.backgroundColor));
+      }
+      return out;
+    });
+    for (const [sel, v] of Object.entries(r)) expect(v, `${theme} ${sel}`).toBeGreaterThan(2.9);
+  }
+});

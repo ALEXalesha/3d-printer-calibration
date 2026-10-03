@@ -111,3 +111,6 @@ td.mono { font-size: 12px; white-space: nowrap; }
   .card.import { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+:root[data-theme="light"] .step { background: none; }
+td:nth-child(3) { white-space: nowrap; }
+:root[data-theme="light"] button.primary, :root[data-theme="light"] button.big { background: var(--accent); border-color: var(--accent); color: #fff; }

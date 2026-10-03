@@ -172,10 +172,13 @@
       el = h('input', { type: 'text', 'data-path': path, value: v === undefined ? '' : String(v) });
       el.addEventListener('change', () => { setPath(target(), path, el.value); onChange(path, el); });
     } else {
-      // lang="en": a dot as in G-code, not the comma of a Russian page
-      el = h('input', { type: 'number', lang: 'en', 'data-path': path, step: opts.step || 'any', value: v === undefined ? '' : String(v) });
+      // A text field, not type=number: Chromium shows numbers with the system's decimal
+      // comma whatever the page says, and G-code numbers have a dot. A comma typed in is
+      // read as a dot.
+      el = h('input', { type: 'text', inputmode: 'decimal', 'data-path': path, value: v === undefined ? '' : String(v) });
       el.addEventListener('change', () => {
-        const n = opts.int ? parseInt(el.value, 10) : parseFloat(el.value);
+        const raw = el.value.replace(',', '.');
+        const n = opts.int ? parseInt(raw, 10) : parseFloat(raw);
         setPath(target(), path, Number.isFinite(n) ? n : el.value);
         onChange(path, el);
       });
@@ -521,13 +524,13 @@
       if (spec.type === 'list') {
         input = h('input', { type: 'text', 'data-param': spec.key, value: prm[spec.key].map((v) => v.toFixed(spec.digits || 2)).join(' ') });
       } else {
-        input = h('input', { type: 'number', lang: 'en', 'data-param': spec.key, min: spec.min, max: spec.max, step: spec.step, value: String(prm[spec.key]) });
+        input = h('input', { type: 'text', inputmode: spec.type === 'int' ? 'numeric' : 'decimal', 'data-param': spec.key, value: String(prm[spec.key]) });
       }
       input.addEventListener('change', () => {
         let v;
         if (spec.type === 'list') v = input.value.split(/\s+/).filter(Boolean).map((x) => C3D.num.pyRound(parseFloat(x.replace(',', '.')), 3));
         else if (spec.type === 'int') v = parseInt(input.value, 10);
-        else v = C3D.num.pyRound(parseFloat(input.value), spec.digits || 3);
+        else v = C3D.num.pyRound(parseFloat(input.value.replace(',', '.')), spec.digits || 3);
         S.params[tid] = Object.assign({}, S.params[tid] || {}, { [spec.key]: v });
         const errs = PR.validate(tid, testParams(tid), S.printer, S.material);
         err.textContent = errs.join('; ');

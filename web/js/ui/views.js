@@ -75,7 +75,7 @@
     constructor(container) {
       this.container = container;
       this.ok = typeof THREE !== 'undefined';
-      this.theta = -0.9; this.phi = 0.9; this.dist = 1;
+      this.theta = -0.45; this.phi = 0.75; this.dist = 1;
       this.layerZs = [];
       if (!this.ok) return;
       try {
@@ -135,7 +135,7 @@
       geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
       this.lines = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ vertexColors: true }));
       this.scene.add(this.lines);
-      this.center = new THREE.Vector3((minX + maxX) / 2, maxZ / 3, -(minY + maxY) / 2);
+      this.center = new THREE.Vector3((minX + maxX) / 2, maxZ / 2, -(minY + maxY) / 2);
       this.size = Math.max(maxX - minX, maxY - minY, maxZ, 20);
       this.showUpTo(this.layerZs.length);
     }
@@ -156,7 +156,7 @@
       this.renderer.setClearColor(dark ? 0x1c1e24 : 0xf4f6fa, 1);
       this.camera.aspect = w / h;
       this.camera.updateProjectionMatrix();
-      const r = this.size * 2.4 * this.dist;
+      const r = this.size * 2.1 * this.dist;
       this.camera.position.set(this.center.x + r * Math.cos(this.phi) * Math.sin(this.theta), this.center.y + r * Math.sin(this.phi),
         this.center.z + r * Math.cos(this.phi) * Math.cos(this.theta));
       this.camera.lookAt(this.center);
