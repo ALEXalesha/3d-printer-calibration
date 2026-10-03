@@ -27,6 +27,20 @@ def test_info(test_id):
     raise KeyError(test_id)
 
 
+def normalize(test_id, prm):
+    """Whole-number parameters as int, list values as float (see profiles._normalize)."""
+    out = dict(prm)
+    for spec in test_info(test_id)["params"]:
+        v = out.get(spec["key"])
+        if spec["type"] == "int" and isinstance(v, (int, float)) and not isinstance(v, bool) and float(v).is_integer():
+            out[spec["key"]] = int(v)
+        elif spec["type"] == "num" and isinstance(v, int) and not isinstance(v, bool):
+            out[spec["key"]] = float(v)
+        elif spec["type"] == "list" and isinstance(v, list):
+            out[spec["key"]] = [float(x) if isinstance(x, int) and not isinstance(x, bool) else x for x in v]
+    return out
+
+
 def _levels(a, b, step):
     return abs(a - b) // step + 1
 
@@ -45,7 +59,7 @@ def validate(test_id, prm, printer, material):
                 errors.append(f"{k}: 2..8 values")
                 continue
             if any(not isinstance(x, (int, float)) or isinstance(x, bool) or not spec["min"] <= x <= spec["max"] for x in v):
-                errors.append(f"{k}: values {spec['min']}..{spec['max']}")
+                errors.append(f"{k}: values {trim(spec['min'], 3)}..{trim(spec['max'], 3)}")
             elif any(b <= a for a, b in zip(v, v[1:])):
                 errors.append(f"{k}: must grow")
             continue
@@ -55,7 +69,7 @@ def validate(test_id, prm, printer, material):
         if spec["type"] == "int" and float(v) != int(v):
             errors.append(f"{k}: whole number")
         if not spec["min"] <= v <= spec["max"]:
-            errors.append(f"{k}: {spec['min']}..{spec['max']}")
+            errors.append(f"{k}: {trim(spec['min'], 3)}..{trim(spec['max'], 3)}")
     if errors:
         return errors
     if test_id == "temp_tower":

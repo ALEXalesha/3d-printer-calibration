@@ -183,5 +183,69 @@
    "test_tokens_match_css"
   ]
  ],
- "js": []
+ "js": [
+  [
+   "js-e-sign",
+   "web/js/core/generator.js",
+   "E${fixed(e, 5)}",
+   "E${fixed(-e, 5)}",
+   "golden.test.js"
+  ],
+  [
+   "js-fixed-tie",
+   "web/js/core/num.js",
+   "if (last % 2 === 1) s = decLast(s);",
+   "",
+   "num.test.js"
+  ],
+  [
+   "js-hypot-correction",
+   "web/js/core/num.js",
+   "h += (csum - 1.0 + (frac1 + frac2)) / (2.0 * h);",
+   "",
+   "num.test.js golden.test.js"
+  ],
+  [
+   "js-replace-first",
+   "web/js/core/generator.js",
+   "this.out(s.split('{a}').join(String(a)))",
+   "this.out(s.replace('{a}', String(a)))",
+   "core.test.js"
+  ],
+  [
+   "js-pa-command",
+   "web/js/core/generator.js",
+   "this.ctx.fw.pressure_advance.split",
+   "this.ctx.fw.fan.split",
+   "golden.test.js"
+  ],
+  [
+   "js-check-foreign",
+   "web/js/core/check.js",
+   "if (foreign.has(head)) bad(",
+   "if (false) bad(",
+   "core.test.js"
+  ],
+  [
+   "js-import-bed",
+   "web/js/core/importer.js",
+   "(numEq(b, bed) ? a + '{bed_temp}' : all)",
+   "all",
+   "core.test.js"
+  ],
+  [
+   "js-slow-layer",
+   "web/js/core/generator.js",
+   "if (0 < dt && dt < minTime) {",
+   "if (0 < dt && dt < minTime * 0.5) {",
+   "golden.test.js"
+  ],
+  [
+   "js-data-stale",
+   "profiles/materials/pla.json",
+   "\"bed\": 60",
+   "\"bed\": 61",
+   "data.test.js"
+  ]
+ ]
 }

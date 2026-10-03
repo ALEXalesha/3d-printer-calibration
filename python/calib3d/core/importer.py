@@ -7,6 +7,8 @@ reports what it replaced and what it could not find. Twin: web/js/core/importer.
 """
 import re
 
+from .num import py_round
+
 LAYER_MARKERS = (";LAYER_CHANGE", ";LAYER:", "; CHANGE_LAYER")
 END_MARKERS = (";TYPE:Custom", ";TIME_ELAPSED:", "; filament end gcode", "; MACHINE_END_GCODE_START", ";End of Gcode",
                "; EXECUTABLE_BLOCK_END", "; CONFIG_BLOCK_START", "; prusaslicer_config = begin",
@@ -165,7 +167,10 @@ def substitute(lines, temps, part):
     out, report = [], []
 
     def num_eq(s, v):
-        return v is not None and abs(float(s) - v) < 1e-9
+        try:
+            return v is not None and abs(float(s) - v) < 1e-9
+        except ValueError:
+            return False
 
     for i, line in enumerate(lines):
         new = line
@@ -310,11 +315,11 @@ def parse(text, file_name=""):
     if bed is None:
         bed = from_code(("M190",)) or from_code(("M140",))
     if t_print is not None:
-        m["nozzle_temp"] = int(round(t_print))
+        m["nozzle_temp"] = int(py_round(t_print))
     if t_first is not None:
-        m["first_layer_temp"] = int(round(t_first))
+        m["first_layer_temp"] = int(py_round(t_first))
     if bed is not None:
-        m["bed"] = int(round(bed))
+        m["bed"] = int(py_round(bed))
     pa = num("pressure_advance")
     if pa is not None:
         m["pa_default"] = pa

@@ -119,7 +119,7 @@ def _check_field(d, spec, errors, required=True):
     else:
         ok = False
     if not ok:
-        errors.append(f"{path}: bad value {v!r}")
+        errors.append(f"{path}: bad value {json.dumps(v, ensure_ascii=False, separators=(',', ':'))}")
 
 
 def validate_printer(p):
@@ -151,3 +151,29 @@ def validate_material(m):
         elif abs(t["start"] - t["end"]) / t["step"] > 15:
             errors.append("tower: more than 16 levels")
     return errors
+
+
+def _normalize(d, specs):
+    """Whole-number fields as int (a JSON "80.0" must print as 80, the same in Python and
+    JavaScript); a copy, the input is not changed."""
+    d = copy.deepcopy(d)
+    for spec in specs:
+        if spec[1] != "int":
+            continue
+        cur = d
+        parts = spec[0].split(".")
+        for part in parts[:-1]:
+            cur = cur.get(part) if isinstance(cur, dict) else None
+        if isinstance(cur, dict):
+            v = cur.get(parts[-1])
+            if _num(v) and float(v).is_integer():
+                cur[parts[-1]] = int(v)
+    return d
+
+
+def normalize_printer(p):
+    return _normalize(p, schema()["printer"])
+
+
+def normalize_material(m):
+    return _normalize(m, schema()["material"])

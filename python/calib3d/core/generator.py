@@ -978,9 +978,13 @@ def fits(printer, box, margin=1.0):
 
 def generate(printer, material, test_id, params=None, lang="ru"):
     """One test file. Shifted to the bed centre if the reference place does not fit."""
+    from .params import normalize
+    printer = profiles.normalize_printer(printer)
+    material = profiles.normalize_material(material)
     prm = default_params(test_id, material, printer)
     if params:
         prm.update(params)
+    prm = normalize(test_id, prm)
     build = BUILDERS[test_id]
     ctx = Ctx(printer, material, lang)
     res = build(ctx, prm)

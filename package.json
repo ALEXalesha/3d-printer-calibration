@@ -1,0 +1,26 @@
+{
+  "name": "calibrate3dprinter",
+  "productName": "Calibrate 3D Printer",
+  "version": "1.0.0",
+  "description": "Ready calibration G-code for any FDM printer, no slicer needed",
+  "author": "ALEXalesha",
+  "license": "MIT",
+  "private": true,
+  "main": "electron/main.js",
+  "homepage": "https://github.com/ALEXalesha/Calibrate3dPrinter",
+  "scripts": {
+    "start": "electron .",
+    "data": "python tools/build_data.py",
+    "test": "node --test --test-concurrency=1 \"tests/js/*.test.js\"",
+    "test:web": "playwright test --workers=1",
+    "test:app": "playwright test --config=playwright.app.config.js --workers=1",
+    "dist": "electron-builder --win portable nsis --x64"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1",
+    "electron": "43.0.0",
+    "electron-builder": "^26.15.3",
+    "fast-check": "^3.23.2",
+    "three": "^0.170.0"
+  }
+}

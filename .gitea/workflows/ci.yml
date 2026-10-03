@@ -25,7 +25,13 @@ jobs:
       - name: Python dependencies
         run: pip install -r requirements-dev.txt
 
+      - name: Node dependencies first (the equality law runs node)
+        run: npm ci --no-audit --no-fund
+
       - name: Python tests (Qt offscreen)
         env:
           QT_QPA_PLATFORM: offscreen
         run: python -m pytest -q
+
+      - name: JavaScript core (node:test)
+        run: npm test

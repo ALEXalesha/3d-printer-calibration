@@ -16,7 +16,7 @@ import math
 import re
 
 from . import profiles
-from .num import fixed, hypot
+from .num import fixed, hypot, py_round, trim
 
 _WORD = re.compile(r"([A-Z])([-+]?\d*\.?\d+)")
 _BRACES = re.compile(r"\{[^{}\n]*\}")
@@ -95,7 +95,7 @@ def check(text, printer, material, test_id, body_start=None, body_end=None, max_
     t_hi = max(t["start"], t["end"], material["nozzle_temp"], material["first_layer_temp"]) + 15
     z_top = printer["bed"]["z"]
     z_limit = (max_z + printer["retract"]["z_hop"] + 0.001) if max_z is not None else z_top
-    h = round(0.5 * nozzle, 3)
+    h = py_round(0.5 * nozzle, 3)
     area_lo, area_hi = 0.2 * nozzle * h, 2.5 * nozzle * h
     use_min_time = test_id not in NO_MIN_TIME
     min_time = material["min_layer_time"]
@@ -132,7 +132,7 @@ def check(text, printer, material, test_id, body_start=None, body_end=None, max_
         if in_body and line.startswith(";Z:"):
             lz = float(line[3:])
             if lz <= last_layer_z:
-                bad("layers", f"line {i + 1}: layer Z {lz:g} not above {last_layer_z:g}")
+                bad("layers", f"line {i + 1}: layer Z {trim(lz, 3)} not above {trim(last_layer_z, 3)}")
             last_layer_z = lz
         if head is None:
             continue
@@ -144,17 +144,17 @@ def check(text, printer, material, test_id, body_start=None, body_end=None, max_
             absolute = False
         elif head in ("M104", "M109") and "S" in w and w["S"] > 0 and in_body:
             if not t_lo <= w["S"] <= t_hi:
-                bad("temperature", f"line {i + 1}: nozzle {w['S']:g} outside {t_lo}..{t_hi}")
+                bad("temperature", f"line {i + 1}: nozzle {trim(w['S'], 1)} outside {t_lo}..{t_hi}")
         elif head in ("M140", "M190") and "S" in w and w["S"] > 0:
             if w["S"] > 130 or abs(w["S"] - material["bed"]) > 0.5:
-                bad("temperature", f"line {i + 1}: bed {w['S']:g}, material {material['bed']}")
+                bad("temperature", f"line {i + 1}: bed {trim(w['S'], 1)}, material {material['bed']}")
         elif head == "SET_VELOCITY_LIMIT" and "ACCEL" in w:
             if float(w["ACCEL"]) > printer["max_accel"]:
                 bad("accel", f"line {i + 1}: {w['ACCEL']} > {printer['max_accel']}")
         elif head == "M204":
             for k in ("S", "P", "T"):
                 if k in w and w[k] > printer["max_accel"]:
-                    bad("accel", f"line {i + 1}: {w[k]:g} > {printer['max_accel']}")
+                    bad("accel", f"line {i + 1}: {trim(w[k], 1)} > {printer['max_accel']}")
         elif head in ("G0", "G1"):
             if "F" in w:
                 f = w["F"]
@@ -165,20 +165,20 @@ def check(text, printer, material, test_id, body_start=None, body_end=None, max_
             d = hypot(nx - x, ny - y)
             if in_body:
                 if "Z" in w and (nz > z_limit + 1e-9 or nz > z_top):
-                    bad("z_max", f"line {i + 1}: Z{nz:g}")
+                    bad("z_max", f"line {i + 1}: Z{trim(nz, 3)}")
                 if d > 0:
                     if not _inside(printer, nx, ny, 0.0 if e <= 0 else 1.0):
-                        bad("outside_bed", f"line {i + 1}: X{nx:g} Y{ny:g}")
+                        bad("outside_bed", f"line {i + 1}: X{trim(nx, 3)} Y{trim(ny, 3)}")
                     if f < 300 - 1e-9:
-                        bad("speed", f"line {i + 1}: F{f:g} < 300")
+                        bad("speed", f"line {i + 1}: F{trim(f, 1)} < 300")
                     if f > (max_f_print if e > 0 else max_f_any):
-                        bad("speed", f"line {i + 1}: F{f:g} above the printer limit")
+                        bad("speed", f"line {i + 1}: F{trim(f, 1)} above the printer limit")
                     if e < 0:
                         bad("extrusion", f"line {i + 1}: negative E on a move")
                     elif e > 0:
                         a = e * fil_area / d
                         if not area_lo <= a <= area_hi:
-                            bad("extrusion", f"line {i + 1}: cross-section {a:.4f} mm2 not plausible for nozzle {nozzle:g}")
+                            bad("extrusion", f"line {i + 1}: cross-section {fixed(a, 4)} mm2 not plausible for nozzle {trim(nozzle, 2)}")
                     if layer_time is not None and f > 0:
                         layer_time += d / (f / 60)
                         if e > 0 and f > 600.5:
@@ -196,7 +196,7 @@ def check(text, printer, material, test_id, body_start=None, body_end=None, max_
                         if retracted == 0:
                             bad("retraction", f"line {i + 1}: push back without a retract")
                         elif abs(e - retracted) > 0.0051:
-                            bad("retraction", f"line {i + 1}: back {e:g} after retract {retracted:g}")
+                            bad("retraction", f"line {i + 1}: back {trim(e, 3)} after retract {trim(retracted, 3)}")
                         retracted = 0.0
             x, y, z = nx, ny, nz
     close_layer()
