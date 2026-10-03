@@ -111,6 +111,41 @@
    "minutes = py_round(res.time / 60)",
    "minutes = int(res.time / 60)",
    "test_params"
+  ],
+  [
+   "import-bed-temp",
+   "python/calib3d/core/importer.py",
+   "\"{bed_temp}\" if num_eq(m.group(2), bed)",
+   "\"{bed_temp}\" if False",
+   "test_import"
+  ],
+  [
+   "import-flavor-map",
+   "python/calib3d/core/importer.py",
+   "\"marlin2\": \"marlin\"",
+   "\"marlin2\": \"klipper\"",
+   "test_import"
+  ],
+  [
+   "import-last-layer",
+   "python/calib3d/core/importer.py",
+   "            last_layer = i\n",
+   "            last_layer = 0\n",
+   "test_import"
+  ],
+  [
+   "import-mode-guard",
+   "python/calib3d/core/generator.py",
+   "if not sim[\"e_relative_set\"]:",
+   "if False:",
+   "test_import"
+  ],
+  [
+   "import-macro-temps",
+   "python/calib3d/core/importer.py",
+   "return key + \"={first_layer_nozzle_temp}\"",
+   "return mm.group(0)",
+   "test_import"
   ]
  ],
  "js": []

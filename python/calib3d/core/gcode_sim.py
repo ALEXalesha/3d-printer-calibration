@@ -24,6 +24,7 @@ def end_state(lines, heat_time=240.0):
     absolute = True
     e_absolute = False
     e_pos = 0.0
+    e_mode_set = False
     for line in lines:
         head, w = words(line)
         if head is None:
@@ -34,8 +35,10 @@ def end_state(lines, heat_time=240.0):
             absolute = False
         elif head == "M82":
             e_absolute = True
+            e_mode_set = True
         elif head == "M83":
             e_absolute = False
+            e_mode_set = True
         elif head == "G92":
             if "E" in w:
                 e_pos = w["E"]
@@ -62,4 +65,5 @@ def end_state(lines, heat_time=240.0):
                     de = w["E"]
                 if de > 0:
                     e_total += de
-    return {"x": x, "y": y, "z": z, "e": e_total, "time": heat_time}
+    return {"x": x, "y": y, "z": z, "e": e_total, "time": heat_time,
+            "absolute": absolute, "e_relative_set": e_mode_set and not e_absolute}

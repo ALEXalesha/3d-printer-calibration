@@ -1,0 +1,74 @@
+{
+  "_comment": "What the importer must find in each synthetic file (shared by tests/py/test_import.py and tests/js/import.test.js). printer/material: subsets that must match exactly. start/end: lines that must be present.",
+  "elegoo.gcode": {
+    "slicer": "elegoo", "firmware_from": "header", "warnings": [],
+    "printer": {"name": "Elegoo Centauri Carbon", "firmware": "klipper", "nozzle": 0.4, "filament_diameter": 1.75,
+                "bed": {"x": 256.0, "y": 256.0, "z": 256.0, "origin": "corner", "shape": "rect"},
+                "retract": {"length": 0.8, "speed": 30.0, "z_hop": 0.4}, "max_accel": 20000, "max_speed": 500.0,
+                "default_accel": 5000, "travel_speed": 300.0},
+    "material": {"type": "PETG", "nozzle_temp": 255, "first_layer_temp": 255, "bed": 80, "pa_default": 0.02, "mvs": 10.0},
+    "missing": [],
+    "start": ["M109 S{first_layer_nozzle_temp}", "M6211 A1 L200 T0 Q{first_layer_nozzle_temp} R{first_layer_nozzle_temp} S{first_layer_nozzle_temp}",
+              "M190 S{bed_temp}", "M104 S140", ";bed_level_temp:{bed_temp}", ";initial_filament:{filament_type}",
+              "SET_PRINT_STATS_INFO TOTAL_LAYER={total_layers} CURRENT_LAYER=0", ";LAYER_COUNT:{total_layers}"],
+    "start_absent": ["M73 P0 R5", "M73 P2 R4"],
+    "end": ["M104 S0 ;Turn-off hotend", "G1 Z100 F20000 ; Move print head up"],
+    "replaced": 8
+  },
+  "orca.gcode": {
+    "slicer": "orca", "firmware_from": "header", "warnings": [],
+    "printer": {"name": "Voron 2.4 300", "firmware": "klipper", "bed": {"x": 300.0, "y": 300.0, "z": 280.0, "origin": "corner", "shape": "rect"},
+                "retract": {"length": 0.5, "speed": 35.0, "z_hop": 0.2}, "max_accel": 10000, "default_accel": 4000},
+    "material": {"type": "PLA", "nozzle_temp": 210, "first_layer_temp": 215, "bed": 60, "pa_default": 0.035, "mvs": 18.0},
+    "missing": [],
+    "start": ["PRINT_START BED={bed_temp} HOTEND={first_layer_nozzle_temp} CHAMBER=0", "M190 S{bed_temp}", "M109 S{first_layer_nozzle_temp}"],
+    "start_absent": [],
+    "end": ["PRINT_END", "M104 S0"],
+    "replaced": 3
+  },
+  "bambu.gcode": {
+    "slicer": "bambu", "firmware_from": "header", "warnings": ["bambu"],
+    "printer": {"name": "Bambu Lab P1S", "firmware": "marlin", "bed": {"x": 256.0, "y": 256.0, "z": 256.0, "origin": "corner", "shape": "rect"}},
+    "material": {"type": "PETG", "nozzle_temp": 250, "first_layer_temp": 255, "bed": 70},
+    "missing": [],
+    "start": ["M140 S{bed_temp}", "M104 S{first_layer_nozzle_temp}", "M109 S{first_layer_nozzle_temp}", "M900 K0.02 L1000 M10"],
+    "start_absent": ["M73 P0 R9"],
+    "end": ["M400", "G1 Z100 F600", "M84"],
+    "replaced": 4
+  },
+  "prusa.gcode": {
+    "slicer": "prusa", "firmware_from": "header", "warnings": [],
+    "printer": {"name": "MK4", "firmware": "marlin", "fw_overrides": {"pressure_advance": "M572 S{v}"},
+                "bed": {"x": 250.0, "y": 210.0, "z": 220.0, "origin": "corner", "shape": "rect"},
+                "retract": {"length": 0.7, "speed": 35.0, "z_hop": 0.2}, "max_accel": 4000, "max_speed": 300.0},
+    "material": {"type": "PLA", "nozzle_temp": 210, "first_layer_temp": 215, "bed": 60, "mvs": 15.0},
+    "missing": [],
+    "start": ["G29 ; mesh bed leveling", "M109 S{first_layer_nozzle_temp} ; wait for extruder temp", "M104 S170 ; set extruder temp for bed leveling", "M109 R170 ; wait for temp"],
+    "start_absent": ["M73 P0 R12"],
+    "end": ["M104 S0 ; turn off temperature", "M84 ; disable motors"],
+    "end_absent": ["; filament used [mm] = 15.2", "M73 P100 R0"],
+    "replaced": 4
+  },
+  "superslicer.gcode": {
+    "slicer": "superslicer", "firmware_from": "header", "warnings": [],
+    "printer": {"firmware": "rrf", "nozzle": 0.6, "filament_diameter": 2.85,
+                "bed": {"x": 230.0, "y": 230.0, "z": 250.0, "origin": "center", "shape": "rect"},
+                "retract": {"length": 1.2, "speed": 40.0, "z_hop": 0.4}},
+    "material": {"type": "ABS", "nozzle_temp": 245, "first_layer_temp": 250, "bed": 100},
+    "missing": [],
+    "start": ["M572 D0 S0.05", "M109 S{first_layer_nozzle_temp}"],
+    "start_absent": [],
+    "end": ["G91", "G1 Z5 F600", "M84"],
+    "replaced": 3
+  },
+  "cura.gcode": {
+    "slicer": "cura", "firmware_from": "header", "warnings": [],
+    "printer": {"firmware": "marlin", "retract": {"length": 5.0, "speed": 45.0}},
+    "material": {"nozzle_temp": 200, "first_layer_temp": 200, "bed": 60},
+    "missing": ["bed.x", "bed.y", "bed.z", "nozzle", "filament_diameter", "retract.z_hop", "material.type"],
+    "start": ["M82 ;absolute extrusion mode", "M109 S{first_layer_nozzle_temp}", "G28 ;Home"],
+    "start_absent": [],
+    "end": ["G1 F2700 E-5", "M84 X Y E"],
+    "replaced": 5
+  }
+}

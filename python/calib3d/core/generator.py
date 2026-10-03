@@ -285,10 +285,15 @@ def start_gcode(g, first_temp, title, total_layers, max_z):
     body = expand_template(ctx, ctx.p["start_gcode"], values, flags)
     for s in body:
         g.out(s)
-    st = ctx.p.get("start_state")
-    if st is None:
-        from .gcode_sim import end_state
-        st = end_state(body)
+    from .gcode_sim import end_state
+    sim = end_state(body)
+    # The tests need absolute moves and relative extrusion. A start code that leaves
+    # another mode (Cura's M82, a G91 at the end) gets the modes set right after it.
+    if not sim["absolute"]:
+        g.out("G90")
+    if not sim["e_relative_set"]:
+        g.out("M83")
+    st = ctx.p.get("start_state") or sim
     g.x, g.y, g.z = st["x"] - ctx.ox, st["y"] - ctx.oy, st["z"]
     g.time += st["time"]  # нагрев, парковка, чистка и прочистка - примерно
     g.e_total += st["e"]
