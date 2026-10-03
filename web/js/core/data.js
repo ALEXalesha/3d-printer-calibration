@@ -933,7 +933,7 @@
    "type": "PLA",
    "name": "PLA",
    "verified": true,
-   "note": "Alexey's tested preset (Generic PLA @Elegoo Centauri)",
+   "note": "the author's tested preset (Generic PLA @Elegoo Centauri)",
    "tower": {
     "start": 230,
     "end": 190,
@@ -960,7 +960,7 @@
    "type": "PETG",
    "name": "PETG",
    "verified": true,
-   "note": "Alexey's tested preset (Generic PETG @Elegoo Centauri)",
+   "note": "the author's tested preset (Generic PETG @Elegoo Centauri)",
    "tower": {
     "start": 260,
     "end": 220,

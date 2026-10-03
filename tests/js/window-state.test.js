@@ -1,4 +1,4 @@
-// electron/window-state.js is the shared module of Alexey's Electron apps (calculators,
+// electron/window-state.js is the shared module of the author's Electron apps (calculators,
 // Paint Pro, ...): byte for byte the same file, and its rule holds on random inputs.
 'use strict';
 const test = require('node:test');
