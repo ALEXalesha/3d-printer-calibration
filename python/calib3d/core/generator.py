@@ -106,6 +106,8 @@ class Gcode:
         self.time = 0.0
         self.e_total = 0.0
         self.retract_len = ctx.RETRACT
+        self.body_start = 0
+        self.body_end = None
 
     def out(self, s):
         self.lines.append(s)
@@ -290,10 +292,12 @@ def start_gcode(g, first_temp, title, total_layers, max_z):
     g.x, g.y, g.z = st["x"] - ctx.ox, st["y"] - ctx.oy, st["z"]
     g.time += st["time"]  # нагрев, парковка, чистка и прочистка - примерно
     g.e_total += st["e"]
+    g.body_start = len(g.lines)
 
 
 def end_gcode(g, max_z):
     ctx = g.ctx
+    g.body_end = len(g.lines)
     values, flags = template_values(ctx, 0, "", 0, max_z)
     for s in expand_template(ctx, ctx.p["end_gcode"], values, flags):
         g.out(s)
@@ -700,6 +704,11 @@ def max_flow_test(ctx, prm):
     limit = ctx.MAX_SPEED * area(WW, HH)       # the printer's top speed caps the test
     if v1 > limit:
         v1 = float(math.floor(limit))
+    low = 5.0 * area(WW, HH)                   # and 5 mm/s at the bottom (F300, the check's floor)
+    if v0 < low:
+        v0 = float(math.ceil(low))
+    if v1 < v0 + 4:
+        v1 = v0 + 4
     box = (78.0, 118.0, 178.0, 138.0)
     BASE = py_round(2 * ctx.H, 3)
     zs = layers_to(BASE, ctx.H) + [py_round(BASE + HH * (i + 1), 3) for i in range(py_round((v1 - v0) / HH))]
