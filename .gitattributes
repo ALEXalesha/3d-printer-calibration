@@ -1,7 +1,8 @@
+* text=auto eol=lf
 # G-code is compared byte for byte (tests/golden): never touch line endings.
 *.gcode -text -diff
 tests/golden/SHA256SUMS -text
-* text=auto eol=lf
+# reference/ is a byte-exact copy of the working generator.
+reference/** -text
 *.ico binary
 *.png binary
-reference/** -text
