@@ -3,7 +3,7 @@ the calculators). Surfaces are the page colour blended with the theme's "ink" th
 glass layers are in CSS. tests/py/test_ui_theme.py compares the tokens with the CSS file."""
 from PySide6.QtCore import QPointF, Qt
 from PySide6.QtGui import QColor, QPainter
-from PySide6.QtWidgets import QComboBox
+from PySide6.QtWidgets import QComboBox, QListView
 
 THEMES = ["glass", "formal", "light", "night", "warm"]
 DEFAULT = "glass"
@@ -110,13 +110,14 @@ QLineEdit, QPlainTextEdit, QAbstractSpinBox, QComboBox {{
 QLineEdit:focus, QPlainTextEdit:focus, QAbstractSpinBox:focus, QComboBox:focus {{ border-color: {p['accent']}; }}
 *[missing="true"] {{ border: 2px solid {p['danger']}; }}
 QPlainTextEdit {{ font-family: "Cascadia Mono", Consolas, monospace; font-size: 12px; }}
-QComboBox {{ padding-right: 26px; }}
+QComboBox {{ padding: 5px 30px 5px 12px; combobox-popup: 0; }}
 QComboBox::drop-down {{ border: none; width: 24px; background: transparent; }}
 QComboBox::down-arrow {{ image: none; width: 0; height: 0; }}
 QComboBox QAbstractItemView {{
-    background: {p['surface2']}; border: 1px solid {p['border']}; outline: none;
+    background: {p['surface2']}; color: {p['text']}; border: 1px solid {p['border']}; outline: none; padding: 4px;
     selection-background-color: {p['accent']}; selection-color: {p['accent_text']};
 }}
+QComboBox QAbstractItemView::item {{ padding: 6px 14px; min-height: 22px; border-radius: 5px; }}
 QCheckBox {{ spacing: 8px; }}
 QCheckBox::indicator {{
     width: 17px; height: 17px; border-radius: 5px; border: 1px solid {p['border']}; background: {p['surface2']};
@@ -148,6 +149,12 @@ class Combo(QComboBox):
     square over the rounded field) and QSS cannot draw a triangle, so it is drawn here."""
 
     arrow_color = "#9aa3b5"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # the default popup ignores QSS ::item padding and drew a plain white system list with the
+        # text against its edges (Alexey 03.10); a QListView takes the themed item style
+        self.setView(QListView(self))
 
     def paintEvent(self, event):
         super().paintEvent(event)

@@ -263,3 +263,31 @@ test('buttons and text readable in every theme', async ({ page }) => {
     for (const [sel, v] of Object.entries(r)) expect(v, `${theme} ${sel}`).toBeGreaterThan(2.9);
   }
 });
+
+// Alexey 03.10 (screenshots 231818/231900/231903): "Тема" stuck to its list, the text sat close
+// to the arrow, and the open list was a plain white system list in every theme.
+test('header lists: room around the text, themed options', async ({ page }) => {
+  await open(page);
+  const geo = await page.evaluate(() => {
+    const out = [];
+    for (const id of ['theme', 'lang']) {
+      const sel = document.getElementById(id), lab = document.getElementById(id + '-label');
+      const cs = getComputedStyle(sel);
+      out.push({ id, gap: sel.getBoundingClientRect().left - lab.getBoundingClientRect().right,
+        padR: parseFloat(cs.paddingRight), padL: parseFloat(cs.paddingLeft) });
+    }
+    const t = document.getElementById('theme').getBoundingClientRect(), l = document.getElementById('lang-label').getBoundingClientRect();
+    return { out, pairGap: l.left - t.right };
+  });
+  for (const g of geo.out) {
+    expect(g.gap, g.id).toBeGreaterThanOrEqual(8);
+    expect(g.padR, g.id).toBeGreaterThanOrEqual(28);
+    expect(g.padL, g.id).toBeGreaterThanOrEqual(12);
+  }
+  expect(geo.pairGap).toBeGreaterThanOrEqual(16);
+  for (const th of ['glass', 'night']) {
+    await page.selectOption('#theme', th);
+    const bg = await page.evaluate(() => getComputedStyle(document.querySelector('#theme option')).backgroundColor);
+    expect(bg, th).not.toBe('rgb(255, 255, 255)');
+  }
+});

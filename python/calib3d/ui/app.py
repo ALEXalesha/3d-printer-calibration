@@ -19,11 +19,10 @@ from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QButtonGroup, QCh
                                QScrollArea, QSizePolicy, QSpinBox, QStackedWidget, QTableWidget,
                                QTableWidgetItem, QVBoxLayout, QWidget)
 
-from ..core import check as C
 from ..core import generator as G
 from ..core import importer as I
+from ..core import jobs as J
 from ..core import params as PR
-from ..core import preview as PV
 from ..core import profiles as P
 from . import storage, theme
 from .i18n import default_lang, tr
@@ -142,7 +141,12 @@ class State(QObject):
 
 
 class Generator(QObject):
-    """Generates in a background thread; keeps the last results by their inputs."""
+    """Generates in a worker process, one test after another; keeps results by their inputs.
+
+    A process, not a thread: generation is pure Python and a thread would hold the
+    interpreter lock the window needs (stalls of 0.8-1.9 s measured while clicking during
+    a regeneration, tests/py/test_ui_speed.py). If a process cannot be started, a thread is
+    the fallback."""
     done = Signal(str, object)
 
     def __init__(self, state):
@@ -151,25 +155,38 @@ class Generator(QObject):
         self.cache = {}
         self.lock = threading.Lock()
         self.round = 0
+        self.pool = None
+        self.pool_failed = False
 
-    def run_one(self, printer, material, tid, prm, lang):
-        key = json.dumps([printer, material, tid, prm, lang], sort_keys=True)
-        with self.lock:
-            hit = self.cache.get(key)
-        if hit is not None:
-            return hit
-        try:
-            res = G.generate(printer, material, tid, prm, lang)
-            out = {"ok": True, "res": res, "summary": PR.summary(res), "problems": C.check_result(res, tid),
-                   "preview": PV.preview_data(res)}
-        except G.DoesNotFit:
-            out = {"ok": False, "error": "does_not_fit"}
-        except Exception as ex:  # a bad profile must not crash the window
-            out = {"ok": False, "error": str(ex)}
+    @staticmethod
+    def key(printer, material, tid, prm, lang):
+        return json.dumps([printer, material, tid, prm, lang], sort_keys=True)
+
+    def _pool(self):
+        if self.pool is None and not self.pool_failed:
+            try:
+                import multiprocessing
+                from concurrent.futures import ProcessPoolExecutor
+                self.pool = ProcessPoolExecutor(max_workers=1, mp_context=multiprocessing.get_context("spawn"))
+            except Exception:
+                self.pool_failed = True
+        return self.pool
+
+    def _remember(self, key, out):
         with self.lock:
             if len(self.cache) > 40:
                 self.cache.clear()
             self.cache[key] = out
+
+    def run_one(self, printer, material, tid, prm, lang):
+        """Synchronously, in this process (saving files, tests)."""
+        key = self.key(printer, material, tid, prm, lang)
+        with self.lock:
+            hit = self.cache.get(key)
+        if hit is not None:
+            return hit
+        out = J.run_job(printer, material, tid, prm, lang)
+        self._remember(key, out)
         return out
 
     def start(self, tids):
@@ -177,22 +194,56 @@ class Generator(QObject):
         rnd = self.round
         s = self.state
         jobs = [(copy.deepcopy(s.printer), copy.deepcopy(s.material), t, s.test_params(t), s.lang) for t in tids]
+        self._next(rnd, jobs)
 
-        def work():
-            for printer, material, tid, prm, lang in jobs:
-                if rnd != self.round:
-                    return
-                out = self.run_one(printer, material, tid, prm, lang)
+    def _next(self, rnd, jobs):
+        """Submit the next job of this round; a newer round drops the rest."""
+        while jobs and rnd == self.round:
+            job = jobs.pop(0)
+            key = self.key(*job)
+            with self.lock:
+                hit = self.cache.get(key)
+            if hit is not None:
+                self.done.emit(job[2], hit)
+                continue
+            pool = self._pool()
+            if pool is None:
+                def work(job=job, key=key):
+                    out = J.run_job(*job)
+                    self._remember(key, out)
+                    if rnd == self.round:
+                        self.done.emit(job[2], out)
+                        self._next(rnd, jobs)
+                threading.Thread(target=work, daemon=True).start()
+                return
+            try:
+                fut = pool.submit(J.run_job, *job)
+            except Exception:
+                self.pool_failed, self.pool = True, None
+                jobs.insert(0, job)
+                continue
+
+            def finished(f, job=job, key=key):
+                try:
+                    out = f.result()
+                except Exception as ex:
+                    out = {"ok": False, "error": str(ex)}
+                self._remember(key, out)
                 if rnd == self.round:
-                    self.done.emit(tid, out)
-
-        th = threading.Thread(target=work, daemon=True)
-        th.start()
-        return th
+                    self.done.emit(job[2], out)        # queued to the window's thread
+                    self._next(rnd, jobs)
+            fut.add_done_callback(finished)
+            return
 
     def now(self, tid):
         s = self.state
         return self.run_one(copy.deepcopy(s.printer), copy.deepcopy(s.material), tid, s.test_params(tid), s.lang)
+
+    def shutdown(self):
+        self.round += 1
+        if self.pool is not None:
+            self.pool.shutdown(wait=False, cancel_futures=True)
+            self.pool = None
 
 
 # ---------------------------------------------------------------- fields
@@ -822,7 +873,8 @@ class TestsPage(QWidget):
         if tid == self.current():
             self.show_result(tid)
         self.update_total()
-        self.win.download.refresh()
+        if self.win.stack.currentIndex() == 3:     # the table is rebuilt only when seen
+            self.win.download.refresh()
 
     def update_total(self):
         L = self.s.lang
@@ -1036,7 +1088,7 @@ class DownloadPage(QWidget):
         for tid in self.s.selected:
             r = self.win.gen.now(tid)
             if r["ok"]:
-                out.append((r["summary"]["name"], r["res"].text))
+                out.append((r["summary"]["name"], r["text"]))
         return out
 
     def choose_folder(self):
@@ -1136,6 +1188,7 @@ class MainWindow(QMainWindow):
 
     def build(self, index=0):
         L = self.state.lang
+        old_tests = getattr(self, "tests", None)
         self.setWindowTitle(tr("app_title", L))
         root = QWidget()
         root.setObjectName("root")
@@ -1151,6 +1204,7 @@ class MainWindow(QMainWindow):
         sub.setObjectName("subtitle")
         col.addWidget(sub)
         head.addLayout(col, 1)
+        head.setSpacing(10)                 # label to its list (was the default 6: "Тема" stuck to it)
         lab = QLabel(tr("theme", L))
         lab.setObjectName("muted")
         head.addWidget(lab)
@@ -1160,6 +1214,7 @@ class MainWindow(QMainWindow):
         self.theme_combo.setCurrentIndex(theme.THEMES.index(self.state.theme))
         self.theme_combo.currentIndexChanged.connect(lambda i: self.set_theme(theme.THEMES[i]))
         head.addWidget(self.theme_combo)
+        head.addSpacing(14)                 # the theme pair and the language pair apart
         lab = QLabel(tr("language", L))
         lab.setObjectName("muted")
         head.addWidget(lab)
@@ -1206,10 +1261,18 @@ class MainWindow(QMainWindow):
         nav.addStretch(1)
         nav.addWidget(self.next_btn)
         lay.addLayout(nav)
-        old = self.centralWidget()
-        self.setCentralWidget(root)
+        # The old pages must really go: setCentralWidget kept the previous root alive, so
+        # after a language switch every result was handled twice and a theme switch
+        # restyled 764 widgets instead of 382.
+        old = self.takeCentralWidget()
+        if old_tests is not None:
+            try:
+                self.gen.done.disconnect(old_tests.got)
+            except (RuntimeError, TypeError):
+                pass
         if old is not None:
             old.deleteLater()
+        self.setCentralWidget(root)
         self.go(index)
 
     def go(self, i):
@@ -1242,8 +1305,9 @@ class MainWindow(QMainWindow):
     def apply_theme(self):
         pal = theme.palette(self.state.theme)
         Combo.arrow_color = pal["muted"]
-        app = QApplication.instance()
-        app.setStyleSheet(theme.qss(self.state.theme))
+        # On the window, not on the application: restyling the application took 0.3-0.6 s,
+        # the window 0.1-0.2 s. Combo popups are children of their combos and follow.
+        self.setStyleSheet(theme.qss(self.state.theme))
         self.tests.colors(pal)
         for w in self.findChildren(Combo):
             w.update()
@@ -1254,7 +1318,9 @@ class MainWindow(QMainWindow):
         self.state.lang = lang
         self.state.save()
         self.build(self.stack.currentIndex())
-        self.apply_theme()
+        # the new widgets take the application stylesheet as they are created; a second
+        # setStyleSheet here cost 0.3-0.6 s and restyled everything again
+        self.tests.colors(theme.palette(self.state.theme))
 
     def moveEvent(self, e):
         super().moveEvent(e)
@@ -1270,6 +1336,7 @@ class MainWindow(QMainWindow):
         if self.memory:
             self.memory.save()
         self.state.save()
+        self.gen.shutdown()
         super().closeEvent(e)
 
     def show_remembered(self):

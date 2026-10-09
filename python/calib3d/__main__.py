@@ -3,6 +3,7 @@
     --self-test=<file>  no window: generate and check all tests for the reference profile,
                         build the window offscreen, write the result to <file>, exit 0/1.
 """
+import multiprocessing
 import os
 import sys
 
@@ -24,7 +25,7 @@ def self_test(path):
         from calib3d.ui.app import MainWindow
         w = MainWindow(remember=False)
         lines.append(f"window: {w.windowTitle()}, version {profiles.version()}")
-        w.gen.round += 1
+        w.gen.shutdown()
         del app
     except Exception as ex:  # report, do not crash silently
         ok = False
@@ -36,6 +37,7 @@ def self_test(path):
 
 
 if __name__ == "__main__":
+    multiprocessing.freeze_support()     # the exe starts its generator worker through this
     for a in sys.argv[1:]:
         if a.startswith("--self-test="):
             sys.exit(self_test(a.split("=", 1)[1]))

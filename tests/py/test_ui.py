@@ -68,7 +68,7 @@ def test_theme_switch(win, qapp):
         win.theme_combo.setCurrentIndex(i)
         qapp.processEvents()
         assert win.state.theme == name
-        assert theme.palette(name)["accent"] in qapp.styleSheet()
+        assert theme.palette(name)["accent"] in win.styleSheet()
 
 
 def test_language_switch_rebuilds_texts(win, qapp):
@@ -80,7 +80,7 @@ def test_language_switch_rebuilds_texts(win, qapp):
     assert win.step_buttons.button(0).text() == "1. Printer"
     assert wait(qapp, lambda: len(win.tests.results) == 10)
     tower = win.gen.now("temp_tower")
-    assert "Temperature tower PETG 260-220" in tower["res"].text
+    assert "Temperature tower PETG 260-220" in tower["text"]
 
 
 def test_settings_survive_restart(win, qapp, _own_home):
@@ -105,7 +105,7 @@ def test_wrapped_labels_never_fixed_height(win, qapp):
         for lab in win.findChildren(QLabel):
             if lab.wordWrap() and lab.isVisible():
                 assert lab.maximumHeight() == 16777215, lab.text()[:40]
-    qapp.setStyleSheet(qapp.styleSheet() + "\n* { font-size: 14px; }")
+    win.setStyleSheet(win.styleSheet() + "\n* { font-size: 14px; }")
     for i in range(5):
         win.go(i)
         qapp.processEvents()
@@ -142,7 +142,7 @@ def test_import_sample_fills_the_profile(win, qapp):
     assert wait(qapp, lambda: len(win.tests.results) == 10)
     out = win.gen.now("cube")
     assert out["ok"] and out["problems"] == []
-    assert "PRINT_START BED=60 HOTEND=215" in out["res"].text
+    assert "PRINT_START BED=60 HOTEND=215" in out["text"]
 
 
 def test_import_marks_missing_fields(win, qapp):
@@ -248,3 +248,34 @@ def test_window_remembers_place(qapp, _own_home):
     assert (w2.width(), w2.height()) == (expect["width"], expect["height"])
     w2.gen.round += 1
     w2.deleteLater()
+
+
+# Alexey 03.10 (screenshots 231818/231900/231903): "Тема" stuck to its list, the dropdown was a
+# plain white system list with the text squeezed against its edges.
+def test_header_labels_keep_their_distance_from_the_lists(win, qapp):
+    win.resize(1200, 760)
+    win.show()
+    qapp.processEvents()
+
+    def right(w):
+        return w.mapTo(win, w.rect().topRight()).x()
+
+    def left(w):
+        return w.mapTo(win, w.rect().topLeft()).x()
+    from PySide6.QtWidgets import QLabel
+    labels = {lab.text(): lab for lab in win.findChildren(QLabel) if lab.objectName() == "muted"}
+    theme_lab = next(l for t, l in labels.items() if left(l) < left(win.theme_combo))
+    lang_lab = next(l for t, l in labels.items() if left(win.theme_combo) < left(l) < left(win.lang_combo))
+    assert left(win.theme_combo) - right(theme_lab) >= 8
+    assert left(win.lang_combo) - right(lang_lab) >= 8
+    assert left(lang_lab) - right(win.theme_combo) >= 16
+
+
+def test_dropdown_items_are_themed_and_have_room(win, qapp):
+    from PySide6.QtWidgets import QListView
+    for combo in (win.theme_combo, win.lang_combo):
+        view = combo.view()
+        assert isinstance(view, QListView)              # QSS ::item padding applies only to a list view
+        fm = combo.fontMetrics()
+        assert view.sizeHintForRow(0) >= fm.height() + 10
+        assert view.sizeHintForColumn(0) >= fm.horizontalAdvance(combo.itemText(0)) + 20

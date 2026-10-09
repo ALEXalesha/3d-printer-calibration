@@ -1,6 +1,6 @@
 """Top and front views of a test (the reference's preview(), drawn with QPainter)."""
-from PySide6.QtCore import QPointF, QRectF, QSize, Qt
-from PySide6.QtGui import QColor, QPainter, QPen
+from PySide6.QtCore import QLineF, QPointF, QRectF, QSize, Qt
+from PySide6.QtGui import QColor, QPainter, QPen, QPixmap
 from PySide6.QtWidgets import QSizePolicy, QWidget
 
 from ..core.preview import COLORS
@@ -24,26 +24,44 @@ class PreviewView(QWidget):
 
     def set_data(self, data):
         self.data = data
+        self._cache = None
         self.update()
 
     def set_colors(self, bg, grid):
         self.bg, self.grid = QColor(bg), QColor(grid)
+        self._cache = None
         self.update()
+
+    def paintEvent(self, event):
+        # Drawing the lines is Python work (37,000 lines for a tower front view, 40-70 ms);
+        # it is done once per data and size into a pixmap, every other paint is a copy.
+        dpr = self.devicePixelRatioF()
+        key = (self.width(), self.height(), dpr)
+        cache = getattr(self, "_cache", None)
+        if cache is None or cache[0] != key:
+            pm = QPixmap(max(1, round(self.width() * dpr)), max(1, round(self.height() * dpr)))
+            pm.setDevicePixelRatio(dpr)
+            pm.fill(Qt.GlobalColor.transparent)
+            p = QPainter(pm)
+            self.render_into(p)
+            p.end()
+            self._cache = (key, pm)
+        p = QPainter(self)
+        p.drawPixmap(0, 0, self._cache[1])
+        p.end()
 
     def lines(self):
         if not self.data:
             return []
         return self.data["top"] if self.mode == "top" else (self.data["front"] or [])
 
-    def paintEvent(self, event):
-        p = QPainter(self)
+    def render_into(self, p):
         p.setRenderHint(QPainter.RenderHint.Antialiasing)
         r = QRectF(self.rect()).adjusted(1, 1, -1, -1)
         p.setPen(Qt.PenStyle.NoPen)
         p.setBrush(self.bg)
         p.drawRoundedRect(r, 10, 10)
         if not self.data:
-            p.end()
             return
         bed = self.data["bed"]
         if self.mode == "top":
@@ -54,7 +72,6 @@ class PreviewView(QWidget):
         else:
             segs = self.lines()
             if not segs:
-                p.end()
                 return
             xs = [c for s in segs for c in (s[0], s[2])]
             x0, x1 = min(xs) - 5, max(xs) + 5
@@ -83,7 +100,16 @@ class PreviewView(QWidget):
         width = max(1.0, min(2.0, s * 0.45))
         pens = {k: QPen(QColor(v), width) for k, v in COLORS.items()}
         default = QPen(QColor("#ffffff"), width)
-        for seg in self.lines():
-            p.setPen(pens.get(seg[4], default))
-            p.drawLine(pt(seg[0], seg[1]), pt(seg[2], seg[3]))
-        p.end()
+        # Drawn in order (later lines cover earlier ones), consecutive lines of one colour
+        # in one call: a Python loop of drawLine calls took 40-100 ms for a tower front view.
+        batch, kind_now = [], None
+        for x_a, y_a, x_b, y_b, kind in self.lines():
+            if kind != kind_now:
+                if batch:
+                    p.setPen(pens.get(kind_now, default))
+                    p.drawLines(batch)
+                batch, kind_now = [], kind
+            batch.append(QLineF(ox + (x_a - x0) * s, oy + (y1 - y_a) * s, ox + (x_b - x0) * s, oy + (y1 - y_b) * s))
+        if batch:
+            p.setPen(pens.get(kind_now, default))
+            p.drawLines(batch)
