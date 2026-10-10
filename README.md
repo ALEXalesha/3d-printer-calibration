@@ -7,6 +7,13 @@ Python program with a Qt window. Everything runs locally, nothing is sent anywhe
 
 Русская версия: [README.ru.md](README.ru.md).
 
+**Try it:** the page runs right in the browser -
+[alexalesha.github.io/Calibrate3dPrinter](https://alexalesha.github.io/Calibrate3dPrinter/).
+**Download** (Windows, [Releases](https://github.com/ALEXalesha/Calibrate3dPrinter/releases/latest)):
+Electron edition `Calibrate3dPrinter-Electron-<version>-Setup.exe` or `-Portable.exe`;
+Python edition `Calibrate3dPrinter-<version>-setup.exe` or `-portable.zip`. Changes:
+[CHANGELOG.md](CHANGELOG.md).
+
 ![Tests step, web page, glass theme](docs/screenshots/web-tests-glass-en.png)
 
 ## Where it comes from
@@ -111,13 +118,13 @@ the printing moves, so a slowed layer ends at about 90 % of the minimum; the che
 
 | Layer | Count | Command |
 |---|---|---|
-| Python: golden, profiles, templates, scaling, check, params, import, equality, Qt window offscreen | 431 (+1 local) | `python -m pytest -q` |
-| JavaScript core (node:test) | 41 | `npm test` |
-| Page, headless Chromium, one worker | 17 | `npx playwright test --workers=1` |
+| Python: golden, profiles, templates, scaling, check, params, import, equality, Qt window offscreen | 462 (+1 local) | `python -m pytest -q` |
+| JavaScript core (node:test) | 44 | `npm test` |
+| Page, headless Chromium, one worker | 18 | `npx playwright test --workers=1` |
 | Electron app, invisible test window | 6 | `npm run test:app` |
 
 Mutations (`python tools/mutate.py`, `--js`): the core is broken on purpose in a temporary
-copy and the tests must go red: 33 Python and 9 JavaScript mutations, all caught. No test
+copy and the tests must go red: 36 Python and 11 JavaScript mutations, all caught. No test
 opens a visible window: Qt runs offscreen, Chromium headless, Electron with
 `CALIB3D_TEST=1` (hidden, unfocusable, off screen); pointer lock is stubbed.
 
@@ -137,5 +144,13 @@ After editing `profiles/*.json` run `python tools/build_data.py` (the page carri
 profiles inside `web/js/core/data.js`; a test checks it is up to date).
 
 ![Tests step, Qt window, light theme](docs/screenshots/qt-tests-light-ru.png)
+
+## Planned
+
+- A 3D view of the G-code in the Python edition too (the page has one; the Qt window shows
+  the top and front views).
+- Checking the "not checked" printer profiles on real printers, and the RepRapFirmware
+  documentation links marked "to check".
+- Builds for macOS and Linux (the page already runs there in any browser).
 
 License: MIT.

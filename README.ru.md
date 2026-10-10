@@ -7,6 +7,13 @@
 
 English: [README.md](README.md).
 
+**Попробовать:** страница работает прямо в браузере -
+[alexalesha.github.io/Calibrate3dPrinter](https://alexalesha.github.io/Calibrate3dPrinter/).
+**Скачать** (Windows, [выпуски](https://github.com/ALEXalesha/Calibrate3dPrinter/releases/latest)):
+версия Electron `Calibrate3dPrinter-Electron-<версия>-Setup.exe` или `-Portable.exe`;
+версия Python `Calibrate3dPrinter-<версия>-setup.exe` или `-portable.zip`. Изменения:
+[CHANGELOG.md](CHANGELOG.md).
+
 ![Шаг «Принтер», страница, светлая тема](docs/screenshots/web-printer-light-ru.png)
 
 ## Откуда это
@@ -109,13 +116,13 @@ SuperSlicer, Cura), берёт начальный код (всё до перво
 
 | Слой | Сколько | Команда |
 |---|---|---|
-| Python: эталон, профили, шаблоны, масштаб, проверка, параметры, импорт, одинаковость, окно Qt offscreen | 431 (+1 локальный) | `python -m pytest -q` |
-| Ядро на JavaScript (node:test) | 41 | `npm test` |
-| Страница, headless Chromium, один поток | 17 | `npx playwright test --workers=1` |
+| Python: эталон, профили, шаблоны, масштаб, проверка, параметры, импорт, одинаковость, окно Qt offscreen | 462 (+1 локальный) | `python -m pytest -q` |
+| Ядро на JavaScript (node:test) | 44 | `npm test` |
+| Страница, headless Chromium, один поток | 18 | `npx playwright test --workers=1` |
 | Приложение Electron, невидимое тестовое окно | 6 | `npm run test:app` |
 
 Мутации (`python tools/mutate.py`, `--js`): ядро нарочно ломается во временной копии, и
-тесты обязаны покраснеть: 33 мутации Python и 9 JavaScript, все пойманы. Ни один тест не
+тесты обязаны покраснеть: 36 мутаций Python и 11 JavaScript, все пойманы. Ни один тест не
 открывает видимого окна: Qt - offscreen, Chromium - headless, Electron - с
 `CALIB3D_TEST=1` (скрыто, без фокуса, за экраном); захват указателя заглушен.
 
@@ -135,5 +142,13 @@ npx electron-builder --win portable nsis  -> dist/electron
 профили внутри `web/js/core/data.js`; тест проверяет, что он свежий).
 
 ![Результаты, окно Qt, стеклянная тема](docs/screenshots/qt-results-glass-en.png)
+
+## В планах
+
+- 3D-просмотр G-code и в версии Python (на странице он есть; окно Qt показывает виды сверху
+  и спереди).
+- Проверка профилей с пометкой «не проверено» на настоящих принтерах и ссылок на
+  документацию RepRapFirmware с пометкой «проверить».
+- Сборки для macOS и Linux (страница там уже работает в любом браузере).
 
 Лицензия: MIT.
