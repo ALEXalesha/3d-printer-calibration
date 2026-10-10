@@ -2,7 +2,10 @@
 Unicode true
 
 !define APP "Calibrate3dPrinter"
-!define TITLE "Calibrate 3D Printer"
+; The Electron edition is "Calibrate 3D Printer" (its own folder, uninstall entry and
+; shortcuts). This one carries "(Python)" so the two never share a shortcut or a name in
+; "Apps"; tests/py/test_installers.py keeps them apart.
+!define TITLE "Calibrate 3D Printer (Python)"
 !define PUBLISHER "ALEXalesha"
 !define REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP}"
 
@@ -31,6 +34,10 @@ BrandingText "${TITLE} ${VERSION}"
 Section "Main"
   SetOutPath "$INSTDIR"
   File /r "${SRC}\*.*"
+  ; 1.0.0 previews named the shortcuts like the Electron edition: drop the Start menu folder
+  ; (Electron puts its shortcut straight into the Start menu, not into a folder).
+  Delete "$SMPROGRAMS\Calibrate 3D Printer\Calibrate 3D Printer.lnk"
+  RMDir "$SMPROGRAMS\Calibrate 3D Printer"
   Delete "$INSTDIR\portable.txt"
   WriteUninstaller "$INSTDIR\Uninstall.exe"
   WriteRegStr HKCU "Software\${APP}" "InstallDir" "$INSTDIR"
