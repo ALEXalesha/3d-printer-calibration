@@ -51,6 +51,9 @@ function createWindow() {
   win.on('closed', () => { win = null; });
   // links open nowhere inside the app
   win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
+  // A file dropped outside the import card must not replace the page: there is no menu and
+  // no reload key, so the app would be stuck on a G-code text until restarted.
+  win.webContents.on('will-navigate', (e) => e.preventDefault());
 }
 
 function writeFiles(dir, files) {

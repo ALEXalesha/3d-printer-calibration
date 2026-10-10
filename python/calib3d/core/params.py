@@ -5,6 +5,7 @@ helper turns "which level/line is best" into a number for the slicer profile.
 Twin: web/js/core/params.js.
 """
 import json
+import math
 import re
 
 from . import profiles
@@ -45,6 +46,11 @@ def _levels(a, b, step):
     return abs(a - b) // step + 1
 
 
+def _is_num(v):
+    """isNum of params.js: a finite number (NaN from an emptied field is not one)."""
+    return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
+
+
 def validate(test_id, prm, printer, material):
     """Problems of a parameter set: list of "key: message" (empty - fine)."""
     errors = []
@@ -58,12 +64,12 @@ def validate(test_id, prm, printer, material):
             if not isinstance(v, list) or not 2 <= len(v) <= 8:
                 errors.append(f"{k}: 2..8 values")
                 continue
-            if any(not isinstance(x, (int, float)) or isinstance(x, bool) or not spec["min"] <= x <= spec["max"] for x in v):
+            if any(not _is_num(x) or not spec["min"] <= x <= spec["max"] for x in v):
                 errors.append(f"{k}: values {trim(spec['min'], 3)}..{trim(spec['max'], 3)}")
             elif any(b <= a for a, b in zip(v, v[1:])):
                 errors.append(f"{k}: must grow")
             continue
-        if not isinstance(v, (int, float)) or isinstance(v, bool):
+        if not _is_num(v):
             errors.append(f"{k}: not a number")
             continue
         if spec["type"] == "int" and float(v) != int(v):

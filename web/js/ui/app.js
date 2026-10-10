@@ -214,6 +214,13 @@
       if (e.dataTransfer.files[0]) readImport(e.dataTransfer.files[0]);
     });
     page.appendChild(drop);
+    // Anywhere else a dropped file would open in place of the page (a browser does that, and
+    // Electron too): only the import card takes files.
+    if (!document.__dropGuard) {
+      document.__dropGuard = true;
+      document.addEventListener('dragover', (e) => e.preventDefault());
+      document.addEventListener('drop', (e) => e.preventDefault());
+    }
 
     const sel = h('select', { id: 'printer-select', onchange: () => { S.printer = findPrinter(sel.value); save(); render(); } });
     for (const p of allPrinters()) sel.appendChild(h('option', { value: p.id, text: (p.verified ? '✓ ' : '') + p.name + (p._user ? `  (${t('my_profile')})` : '') }));

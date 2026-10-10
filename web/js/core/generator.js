@@ -28,6 +28,10 @@
     }
   }
 
+  // Parameters that params.validate() rejects: they never reach G-code.
+  class ParamError extends Error {
+    constructor(errors) { super('parameters: ' + errors.join('; ')); this.kind = 'params'; this.errors = errors; }
+  }
   class DoesNotFit extends Error {
     constructor(msg) { super(msg); this.kind = 'does_not_fit'; }
   }
@@ -207,8 +211,17 @@
     return [a, b, c, d, e];
   }
 
+  // Where the end code parks the head: a corner of a rectangular bed, the front of a round one
+  // (its corner lies outside the circle).
+  function parkPoint(bed) {
+    if (bed.shape === 'round') return [0.0, -(Math.min(bed.x, bed.y) / 2 - 10)];
+    if (bed.origin === 'center') return [-bed.x / 2 + 5, bed.y / 2 - 5];
+    return [5.0, bed.y - 5];
+  }
+
   function templateValues(ctx, firstTemp, title, totalLayers, maxZ) {
     const p = ctx.p, m = ctx.m;
+    const park = parkPoint(p.bed);
     const mvs = m.mvs;
     const f1 = Math.min(6000, Math.max(900, mvs / 0.5 / 0.3 * 60));
     const f2 = Math.min(12000, Math.max(1200, mvs / 0.5 / 0.3 * 60));
@@ -246,8 +259,8 @@
       purge_x2: fixed(c[0], 2), purge_y2: fixed(c[1], 2),
       purge_x3: fixed(d[0], 2), purge_y3: fixed(d[1], 2),
       purge_e: fixed(e, 3),
-      park_x: fixed(p.bed.origin === 'center' ? (-p.bed.x / 2 + 5) : 5.0, 2),
-      park_y: fixed(p.bed.origin === 'center' ? (p.bed.y / 2 - 5) : p.bed.y - 5, 2),
+      park_x: fixed(park[0], 2),
+      park_y: fixed(park[1], 2),
     };
     const flags = Object.assign({}, p.options || {});
     flags.pla_hot_bed = m.type === 'PLA' && m.bed > 50;
@@ -476,8 +489,11 @@
 
   function textWidth(txt, Wd, gap) { return txt.length * Wd + (txt.length - 1) * gap; }
 
+  // Only characters every disk takes: the prefix of an own profile is free text.
+  function safeName(s) { return String(s).replace(/[^A-Za-z0-9._+-]/g, '_'); }
+
   function fileName(ctx, test, matName, rng) {
-    return `${ctx.p.prefix}_${trim(ctx.NOZ, 2)}_${test}_${matName}${rng ? '_' + rng : ''}.gcode`;
+    return safeName(`${ctx.p.prefix}_${trim(ctx.NOZ, 2)}_${test}_${matName}${rng ? '_' + rng : ''}`) + '.gcode';
   }
 
   class Result {
@@ -986,7 +1002,11 @@
     printer = P.normalizePrinter(printer);
     material = P.normalizeMaterial(material);
     let prm = Object.assign(defaultParams(testId, material), params || {});
-    if (C3D.params) prm = C3D.params.normalize(testId, prm);
+    if (C3D.params) {
+      prm = C3D.params.normalize(testId, prm);
+      const errors = C3D.params.validate(testId, prm, printer, material);
+      if (errors.length) throw new ParamError(errors);
+    }
     const build = BUILDERS[testId];
     let ctx = new Ctx(printer, material, lang || 'ru');
     let res = build(ctx, prm);
@@ -1003,7 +1023,7 @@
   }
 
   const api = { generate, defaultParams, TEST_IDS, BUILDERS, Ctx, Gcode, area, templateValues, firmwareCommands,
-    purgeGeometry, text, TemplateError, DoesNotFit, fits, bounds, layersTo };
+    purgeGeometry, text, TemplateError, DoesNotFit, ParamError, parkPoint, safeName, fits, bounds, layersTo };
   C3D.generator = api;
   if (isNode) module.exports = api;
 })();

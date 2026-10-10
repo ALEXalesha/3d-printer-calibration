@@ -25,6 +25,15 @@ _BRACES = re.compile(r"\{[^{}\n]*\}")
 NO_MIN_TIME = ("max_flow", "ringing", "first_layer", "pressure_advance")
 MIN_TIME_SHARE = 0.7
 
+_NUM = re.compile(r"\s*[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?")
+
+
+def _leading_float(s):
+    """parseFloat of JavaScript: the leading number, NaN without one (and NaN compares false).
+    float() raised on ACCEL={...} in own start code and the check crashed."""
+    m = _NUM.match(str(s))
+    return float(m.group(0)) if m else math.nan
+
 
 def _parse(line):
     code = line.split(";", 1)[0].strip()
@@ -149,7 +158,7 @@ def check(text, printer, material, test_id, body_start=None, body_end=None, max_
             if w["S"] > 130 or abs(w["S"] - material["bed"]) > 0.5:
                 bad("temperature", f"line {i + 1}: bed {trim(w['S'], 1)}, material {material['bed']}")
         elif head == "SET_VELOCITY_LIMIT" and "ACCEL" in w:
-            if float(w["ACCEL"]) > printer["max_accel"]:
+            if _leading_float(w["ACCEL"]) > printer["max_accel"]:
                 bad("accel", f"line {i + 1}: {w['ACCEL']} > {printer['max_accel']}")
         elif head == "M204":
             for k in ("S", "P", "T"):

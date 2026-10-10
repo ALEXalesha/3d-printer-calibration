@@ -41,6 +41,13 @@ class DoesNotFit(ValueError):
     pass
 
 
+class ParamError(ValueError):
+    """Parameters that params.validate() rejects: they never reach G-code."""
+    def __init__(self, errors):
+        super().__init__("parameters: " + "; ".join(errors))
+        self.errors = errors
+
+
 def firmware_commands(printer):
     fw = profiles.firmware()[printer["firmware"]]
     out = {k: fw[k] for k in ("pressure_advance", "accel", "accel_band", "layer_progress", "fan")}
@@ -215,6 +222,16 @@ def purge_geometry(ctx):
     return a, b, c, d, e
 
 
+def park_point(bed):
+    """Where the end code parks the head: a corner of a rectangular bed, the front of a round one
+    (its corner lies outside the circle)."""
+    if bed["shape"] == "round":
+        return 0.0, -(min(bed["x"], bed["y"]) / 2 - 10)
+    if bed["origin"] == "center":
+        return -bed["x"] / 2 + 5, bed["y"] / 2 - 5
+    return 5.0, bed["y"] - 5
+
+
 def template_values(ctx, first_temp, title, total_layers, max_z):
     p, m = ctx.p, ctx.m
     mvs = m["mvs"]
@@ -228,6 +245,7 @@ def template_values(ctx, first_temp, title, total_layers, max_z):
     else:
         capped = "100"
     a, b, c, d, e = purge_geometry(ctx)
+    park = park_point(p["bed"])
     v = {
         "nozzle_temp": str(m["nozzle_temp"]),
         "first_layer_nozzle_temp": str(first_temp),
@@ -256,8 +274,8 @@ def template_values(ctx, first_temp, title, total_layers, max_z):
         "purge_x2": fixed(c[0], 2), "purge_y2": fixed(c[1], 2),
         "purge_x3": fixed(d[0], 2), "purge_y3": fixed(d[1], 2),
         "purge_e": fixed(e, 3),
-        "park_x": fixed((-p["bed"]["x"] / 2 + 5) if p["bed"]["origin"] == "center" else 5.0, 2),
-        "park_y": fixed((p["bed"]["y"] / 2 - 5) if p["bed"]["origin"] == "center" else p["bed"]["y"] - 5, 2),
+        "park_x": fixed(park[0], 2),
+        "park_y": fixed(park[1], 2),
     }
     flags = dict(p.get("options") or {})
     flags["pla_hot_bed"] = m["type"] == "PLA" and m["bed"] > 50
@@ -473,8 +491,13 @@ def text_width(txt, Wd, gap):
     return len(txt) * Wd + (len(txt) - 1) * gap
 
 
+def safe_name(s):
+    """Only characters every disk takes: the prefix of an own profile is free text."""
+    return "".join(c if c.isascii() and (c.isalnum() or c in "._+-") else "_" for c in str(s))
+
+
 def file_name(ctx, test, mat_name, rng=""):
-    return f"{ctx.p['prefix']}_{trim(ctx.NOZ, 2)}_{test}_{mat_name}{('_' + rng) if rng else ''}.gcode"
+    return safe_name(f"{ctx.p['prefix']}_{trim(ctx.NOZ, 2)}_{test}_{mat_name}{('_' + rng) if rng else ''}") + ".gcode"
 
 
 class Result:
@@ -978,13 +1001,16 @@ def fits(printer, box, margin=1.0):
 
 def generate(printer, material, test_id, params=None, lang="ru"):
     """One test file. Shifted to the bed centre if the reference place does not fit."""
-    from .params import normalize
+    from .params import normalize, validate
     printer = profiles.normalize_printer(printer)
     material = profiles.normalize_material(material)
     prm = default_params(test_id, material, printer)
     if params:
         prm.update(params)
     prm = normalize(test_id, prm)
+    errors = validate(test_id, prm, printer, material)
+    if errors:
+        raise ParamError(errors)
     build = BUILDERS[test_id]
     ctx = Ctx(printer, material, lang)
     res = build(ctx, prm)

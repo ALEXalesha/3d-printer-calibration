@@ -181,6 +181,27 @@
    "text=\"#e6e8ec\", dim=0.55, accent=\"#4a7ab8\"",
    "text=\"#e6e8ec\", dim=0.55, accent=\"#4a7ab9\"",
    "test_tokens_match_css"
+  ],
+  [
+   "park-round-corner",
+   "python/calib3d/core/generator.py",
+   "if bed[\"shape\"] == \"round\":\n        return 0.0, -(min(bed[\"x\"], bed[\"y\"]) / 2 - 10)\n",
+   "",
+   "test_release_review"
+  ],
+  [
+   "params-not-validated",
+   "python/calib3d/core/generator.py",
+   "    if errors:\n        raise ParamError(errors)\n",
+   "",
+   "test_release_review"
+  ],
+  [
+   "file-name-unsafe",
+   "python/calib3d/core/generator.py",
+   "c if c.isascii() and (c.isalnum() or c in \"._+-\") else \"_\"",
+   "c",
+   "test_release_review"
   ]
  ],
  "js": [
@@ -246,6 +267,20 @@
    "\"bed\": 60",
    "\"bed\": 61",
    "data.test.js"
+  ],
+  [
+   "js-park-round-corner",
+   "web/js/core/generator.js",
+   "if (bed.shape === 'round') return [0.0, -(Math.min(bed.x, bed.y) / 2 - 10)];",
+   "",
+   "release_review.test.js"
+  ],
+  [
+   "js-params-not-validated",
+   "web/js/core/generator.js",
+   "if (errors.length) throw new ParamError(errors);",
+   "",
+   "release_review.test.js"
   ]
  ]
 }
