@@ -21,7 +21,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-OUT = Path(r"C:\Users\you\All_3d\gcode")
+OUT = Path(HERE.parent.parent / "All_3d" / "gcode")  # рядом с папкой проекта
 PREVIEW = HERE / "preview"
 
 FIL_AREA = math.pi * (1.75 / 2) ** 2
