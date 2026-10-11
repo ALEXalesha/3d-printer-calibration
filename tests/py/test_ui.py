@@ -158,7 +158,8 @@ def test_save_folder_and_zip(win, qapp, tmp_path):
     assert len(names) == 10
     cc, petg = P.printer("elegoo-centauri-carbon"), P.material("petg")
     for tid in ("cube", "flow"):
-        r = G.generate(cc, petg, tid)
+        # in the window's language: it follows the system one (GitHub's runner is English)
+        r = G.generate(cc, petg, tid, lang=win.state.lang)
         assert (tmp_path / r.name).read_bytes() == r.text.encode("utf-8")
     z = tmp_path / "all.zip"
     win.download.save_zip(str(z))
