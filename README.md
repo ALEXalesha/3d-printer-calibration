@@ -5,6 +5,9 @@ a preview of each, and a helper that turns "the best line" into the number for y
 slicer profile. Two editions with the same core: a page (browser and Electron) and a
 Python program with a Qt window. Everything runs locally, nothing is sent anywhere.
 
+[![Built with Claude Code](https://img.shields.io/badge/Built_with-Claude_Code-D97757?logo=claude&logoColor=white)](https://claude.com/claude-code)
+Code, tests and docs are written by Claude (Anthropic) in Claude Code. Ideas, testing and decisions - Alexey.
+
 Русская версия: [README.ru.md](README.ru.md).
 
 **Try it:** the page runs right in the browser -
