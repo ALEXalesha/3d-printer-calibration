@@ -1,3 +1,7 @@
+<div align="center">
+
+<img src="assets/icon.png" width="96" alt="">
+
 # Calibrate 3D Printer
 
 Ready-to-print calibration G-code for any FDM printer, without a slicer: ten tests,
@@ -8,6 +12,8 @@ Python program with a Qt window. Everything runs locally, nothing is sent anywhe
 [![Status](https://img.shields.io/badge/status-stable-brightgreen)](#) [![Release](https://img.shields.io/github/v/release/ALEXalesha/Calibrate3dPrinter)](https://github.com/ALEXalesha/Calibrate3dPrinter/releases/latest) [![CI](https://github.com/ALEXalesha/Calibrate3dPrinter/actions/workflows/ci.yml/badge.svg)](https://github.com/ALEXalesha/Calibrate3dPrinter/actions/workflows/ci.yml) [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE) [![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)](https://www.python.org/) [![PySide6](https://img.shields.io/badge/PySide6-41CD52?logo=qt&logoColor=white)](https://doc.qt.io/qtforpython-6/) [![Electron](https://img.shields.io/badge/Electron-47848F?logo=electron&logoColor=white)](https://www.electronjs.org/) [![Three.js](https://img.shields.io/badge/Three.js-000000?logo=threedotjs&logoColor=white)](https://threejs.org/) [![Website](https://img.shields.io/badge/Website-open-0A84FF?logo=googlechrome&logoColor=white)](https://alexalesha.github.io/Calibrate3dPrinter/) [![Built with Claude Code](https://img.shields.io/badge/Built_with-Claude_Code-D97757?logo=claude&logoColor=white)](https://claude.com/claude-code)
 
 Code, tests and docs are written by Claude (Anthropic) in Claude Code. Ideas, testing and decisions - Alexey.
+
+</div>
 
 Русская версия: [README.ru.md](README.ru.md).
 
