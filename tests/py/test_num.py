@@ -25,8 +25,11 @@ def test_hypot_edges():
 
 
 def test_tan_table_is_cpython():
+    # The table was taken once with math.tan on Windows; another system's libm (Linux) may differ in the
+    # last bit (GitHub review 25.10) - so 1 ulp of tolerance, not exact ==. The table itself does not change.
     for a in range(90):
-        assert num.tan_deg(a) == math.tan(math.radians(a))
+        want = math.tan(math.radians(a))
+        assert abs(num.tan_deg(a) - want) <= math.ulp(want), a
 
 
 def test_trim():
